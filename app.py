@@ -123,7 +123,7 @@ def about():
       """
             Hiring applications often require for recruiters and employers to sift through a large volume of applications. With the progress in the development of more sophisticated machine learning algorithms, companies are becoming more reliant on such systems to produce lists of candidates who could be potential hires. These algorithms can, for example, rely on keyword matching for candidate CVs and job requirements. Recently, a new type of algorithms are becoming more extensively used, which try to deploy games, riddles and challenges to capture some of the candidates' qualities. Through these, companies can assess the candidates' capacities by comparing their results to those of successful incumbent successful employees.
 
-A concern which emerges around the concept of a "successful employee" in the hiring context is the following: how does one define what a successful employee is? There might by **multiple ways** of defining this. As [Barocas and Selbst (2016)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2477899) outline: _“Good” must be defined in ways that correspond to measurable outcomes: relatively higher sales, shorter production time, or longer tenure, for example._ The model creators must then _translate some amorphous problem into a question that can be expressed in more formal terms that computers can parse._, which is often an ambiguous task. Therefore, the definition of a "good employee" or the way in which the **target variable** is specified, hugely impacts the model outcomes.
+A concern which emerges around the concept of a "successful employee" in the hiring context is the following: how does one define what a successful employee is? There might by **multiple ways** of defining this. As [Barocas and Selbst (2016)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2477899) outline: _“Good” must be defined in ways that correspond to measurable outcomes: relatively higher sales, shorter production time, or longer tenure, for example._ The model creators must then _translate some amorphous problem into a question that can be expressed in more formal terms that computers can parse_, which is often an ambiguous task. Therefore, the definition of a "good employee" or the way in which the **target variable** is specified, hugely impacts the model outcomes.
 
 As such, any social application of such technologies carries with it risks related to fairness and bias. Inevitably, machine learning models are but mere generalisations and, in issues as complex as hiring, their use can lead to disparate outcomes for protected groups and minorities. Moreover, some of these algorithms can inadvertently become trained to select candidates based on a feature directly correlated with some of their protected characteristics, called "selection by proxy". Such selection is illegal in many countries in the world, where equal employment opportunity laws prevent the employers from making their decisions based on sex, race, religion or belief, ethnic or national origin, disability, age, citizenship, marital, domestic or civil partnership status, sexual orientation, gender identity, pregnancy or related condition (including breastfeeding) or any other basis as protected by applicable law. 
 
@@ -143,6 +143,7 @@ To tackle these problems, we have designed a new paradigm for hiring by the mach
   st.subheader('Methodology')
   st.write(
       """
+THIS SECTION IS A WORK IN PROGRESS AND IS NOT FINISHED
       Here we describe and link the [**NCPT paper**](https://www.nature.com/articles/s41597-022-01872-8). We describe how we labelled the data.
       """
   )
@@ -150,6 +151,7 @@ To tackle these problems, we have designed a new paradigm for hiring by the mach
   st.subheader('Future Works')
   st.write(
       """
+THIS SECTION IS A WORK IN PROGRESS AND IS NOT FINISHED
       Here we describe our collab with Accenture, and potential future applications of the project.
       """
   )
@@ -169,6 +171,7 @@ with st.sidebar:
 
 def data_plot():
   st.subheader('Visualising the demographics data vs score per model')
+  st.write("""In this section we look at the input data for each model. What is the relationship between the scores which were calculated for each candidate based on selection criteria when compared between different protected groups? An interesting observation which was also made by the authors of the [**NCPT paper**](https://www.nature.com/articles/s41597-022-01872-8) was that the scores per individual game, but also the overall scores, negatively correlate with age. Therefore, it appears that gamified assessments have the potential to disadvantage older applicants from the get-go, if we assume that the conclusions from the NCPT dataset extend to other games which might be played in gamified hiring assessments.""")
 
   # Create a selectbox to choose a protected characteristic to explore
   selectbox_Char = create_selectbox('Characteristic to explore', characteristic_dict.keys())
@@ -230,15 +233,20 @@ def data_vis():
   tab1, tab2, tab3 = st.tabs(["PCA", "Components loadings - PCA", "Data charactertistics"])
 
   with tab1:
-    row1_space1, row1_1, row1_space2, row1_2, row1_space3 = st.columns((0.1, 4, 0.1, 4, 0.1))
+    row1_space1, row1_1, row1_space2, row1_2, row1_space3, row1_3, row1_space4= st.columns((0.1, 4, 0.1, 4, 0.1))
     with row1_1:
+      st.subheader("Model A PCA")
+      pcaA, dfA, labelsA, coeffA, componentsA = run_PCA('Model_B_label', 'Model_C_label', 'Model_A_label', 2)
+      plot_no_loadings(dfA)
+
+    with row1_2:
       st.subheader("Model B PCA")
-      pcaB, dfB, labelsB, coeffB, componentsB = run_PCA(PCA_df, 'Model_A_label', 'Model_C_label', 'Model_B_label', 2)
+      pcaB, dfB, labelsB, coeffB, componentsB = run_PCA('Model_A_label', 'Model_C_label', 'Model_B_label', 2)
       plot_no_loadings(dfB)
     
-    with row1_2:
+    with row1_3:
       st.subheader("Model C PCA")
-      pcaC, dfC, labelsC, coeffC, componentsC = run_PCA(PCA_df, 'Model_A_label', 'Model_B_label', 'Model_C_label', 2)
+      pcaC, dfC, labelsC, coeffC, componentsC = run_PCA('Model_A_label', 'Model_B_label', 'Model_C_label', 2)
       plot_no_loadings(dfC)
 
   with tab2:
