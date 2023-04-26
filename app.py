@@ -8,7 +8,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import plotly.express as px
 import seaborn as sns
-import python-math as math
+import math
 from matplotlib_venn import venn3
 from adjustText import adjust_text
 from scikit-learn.decomposition import PCA
