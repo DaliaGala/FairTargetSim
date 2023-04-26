@@ -151,7 +151,12 @@ Due to the nature of our work and the data related to it, it proved challenging 
 
 This dataset contained between 5 and 11 subtests per data battery. Since these subtests were aimed at examining qualities such as working memory, visual attention, and abstract reasoning, this data struck us as similar enough to what could be collected in gamified assessments. Moreover, this dataset includes basic demographic information from each participant, which was necessary for the realisation of our goals.
 
-This dataset was, naturally, not labelled in the context of a hiring algorithm. We were therefore presented with the challenge of applying class labels in order to be able to produce models. We applied binary class labels. We wanted to label participants as having a label "0", which would mean that this participant would not be selected for the job position or interview, and a label of "1", which would mean that the participant would be selected. Moreover, we wanted to have more than 1 way of deciding how these labels will be administered. We prepared 3 datasets, which we subsequently refer to as A, B and C, each with different distribution of positive and negative labels. This distribution was achieved by calculating different weighted averages of the subtest results for each test. Below, we describe the process by which we assigned these labels:
+      """
+  )
+  with c2:
+    st.image('./images/model_image.PNG', use_column_width = True)
+
+  st.write("""This dataset was, naturally, not labelled in the context of a hiring algorithm. We were therefore presented with the challenge of applying class labels in order to be able to produce models. We applied binary class labels. We wanted to label participants as having a label "0", which would mean that this participant would not be selected for the job position or interview, and a label of "1", which would mean that the participant would be selected. Moreover, we wanted to have more than 1 way of deciding how these labels will be administered. We prepared 3 datasets, which we subsequently refer to as A, B and C, each with different distribution of positive and negative labels. This distribution was achieved by calculating different weighted averages of the subtest results for each test. Below, we describe the process by which we assigned these labels:
 
 1. We selected the data battery from the NCPT dataset with the largest number of subtests to maximise the number of available features. This was battery 26, with 11 features.
 
@@ -168,11 +173,7 @@ This dataset was, naturally, not labelled in the context of a hiring algorithm. 
 4. Based on these weighted scores, for each model we remove the bottom 85% of scores and assign a linearly increasing likelihood of being selected when score increases to the top 15% (see figure).
 
 5. We then label 100 candidates according to this probability in the top 15% with the label "1". The remaining candidates have the label "0".
-
-      """
-  )
-  with c2:
-    st.image('./images/model_image.PNG', use_column_width = True)
+""")
 
   st.subheader('Future Works')
   st.write(
