@@ -1,4 +1,3 @@
-
 ### IMPORT LIBRARIES ###
 
 import streamlit as st
@@ -122,7 +121,38 @@ def about():
   #Project description
   st.write(
       """
-      Machine learning is used more and more in hiring applications. Here we describe the main motivation for our project.
+            Hiring applications often require for recuiters and employers to sift through a large volume of applications. With the progress in the development of 
+      more sophisticated machine learning algorithms, companies are becoming more reliant on such systems to produce lists of candidates who could be potential
+      hires. These algorithms can, for example, rely on keyword matching for candidate CVs and job requirements. Recently, a new type of algorithms are 
+      becoming more extensively used, which try to deploy games, riddles and challenges to capture some of the candidates' qualities. Through these, 
+      companies can assess the candidates' capacities by comparing their results to those of successful incument successfull employees.
+
+      A concern which emerges around the concept of a "successful employee" in the hiring context is the following: how does one define what a successfull
+      employee is? There might by **multiple ways** of defining this. As [Barocas and Selbst (2016)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2477899)**'
+      outline: _“Good” must be defined in ways that correspond to measurable outcomes: relatively higher sales, shorter production time, or longer tenure, for example._.
+      The model makers must then _translate some amorphous problem into a question that can be expressed in more formal terms that computers can parse._, which
+      is often an ambiguous task. Therefore, the definition of a "good employee" or the way in which the **target variable** is specified, hugely impacts
+      the model outcomes.
+
+      Therefore, any social application of such technologies carries with it risks related to fairness and bias. Inevitably, machine learning models are
+      but mere generalizations and, in issues as complex as hiring, their use can lead to disparate outcomes for protected groups and minorities. Moreover,
+      some of these algorithms can inadvertently become trained to select candidates based on a feature directly correlated with some of their protected
+      characteristics, called "selection by proxy". Such selection is illegal in many countries in the world, where equal employment opportunity laws prevent the employers
+      from making their decisions based on sex, race, religion or belief, ethnic or national origin, disability, age, citizenship, marital, domestic or civil partnership status, 
+      sexual orientation, gender identity, pregnancy or related condition (including breastfeeding) or any other basis as protected by applicable law. 
+
+      Usually, to address these issues, constraints are put on the models which are being trained and deployed. These could take a form of, for example,
+      mandating that the proportions of candidates selected by the model be correlated with the proportions of the input populations, etc. However, such 
+      measures often result in **accuracy versus fairness** problems. This describes a situation in which achieving better fairness by some specified
+      fairness metric results in lower accuracy of the model.
+
+      To tackle these problems, we have designed a new paradigm for hiring by the machine, which we called Equi Var, for Equivalent Target Variable. This work
+      was carried out to achieve the following goals:
+
+      1. Propose a new paradigm of training hiring algorithms which select "successful candidates" based on equivalent, yet distinct, target variable definitions.
+      2. Demonstrate that such algorithms, though nominally equivalent, can produce differing outcomes with respect to protected characteristics of assessed candidates.
+      3. Present how our paradigm can be used to mitigate the accuracy versus fairness problem.
+
       """
   )
 
