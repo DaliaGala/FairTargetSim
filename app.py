@@ -171,18 +171,7 @@ This dataset was, naturally, not labelled in the context of a hiring algorithm. 
   with c2:
     st.image('./images/model_image.PNG', use_column_width = True)
 
-st.write(
-      """
-5. We then label 100 candidates according to this probability in the top 15% with the label "1". The remaining candidates have the label "0".
-""")
 
-  st.subheader('Future Works')
-  st.write(
-      """
-THIS SECTION IS A WORK IN PROGRESS AND IS NOT FINISHED
-      Here we describe our collab with Accenture, and potential future applications of the project.
-      """
-  )
 
 ### CREATE THE SIDEBAR ###
 
