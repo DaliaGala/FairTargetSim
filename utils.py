@@ -90,8 +90,8 @@ def create_selectbox(title, options):
   selectbox = st.selectbox(title, options)
   return selectbox
 
-def run_PCA(drop_1, drop_2, retain_this, n):
-  df_clean = PCA_df.drop(columns = [drop_1, drop_2, retain_this])
+def run_PCA(df, drop_1, drop_2, retain_this, n):
+  df_clean = df.drop(columns = [drop_1, drop_2, retain_this])
   labels = list(df_clean.columns)
   pca = PCA(n_components=n)
   principalComponents = pca.fit_transform(df_clean)
