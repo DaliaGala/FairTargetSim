@@ -4,7 +4,7 @@ pandas
 matplotlib
 plotly
 seaborn
-math
+python-math
 matplotlib_venn
 adjustText
 sklearn
