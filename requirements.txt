@@ -1,0 +1,10 @@
+streamlit
+numpy
+pandas
+matplotlib
+plotly
+seaborn
+math
+matplotlib_venn
+adjustText
+sklearn
