@@ -233,7 +233,7 @@ def data_vis():
   tab1, tab2, tab3 = st.tabs(["PCA", "Components loadings - PCA", "Data charactertistics"])
 
   with tab1:
-    row1_space1, row1_1, row1_space2, row1_2, row1_space3, row1_3, row1_space4= st.columns((0.1, 4, 0.1, 4, 0.1))
+    row1_space1, row1_1, row1_space2, row1_2, row1_space3, row1_3, row1_space4= st.columns((0.1, 4, 0.1, 4, 0.1, 4, 0.1))
     with row1_1:
       st.subheader("Model A PCA")
       pcaA, dfA, labelsA, coeffA, componentsA = run_PCA('Model_B_label', 'Model_C_label', 'Model_A_label', 2)
