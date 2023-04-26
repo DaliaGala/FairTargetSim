@@ -7,4 +7,4 @@ seaborn
 python-math
 matplotlib_venn
 adjustText
-sklearn
+scikit-learn

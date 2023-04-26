@@ -8,13 +8,13 @@ import matplotlib
 import matplotlib.pyplot as plt
 import plotly.express as px
 import seaborn as sns
-import math
+import python-math as math
 from matplotlib_venn import venn3
 from adjustText import adjust_text
-from sklearn.decomposition import PCA
+from scikit-learn.decomposition import PCA
 import plotly.graph_objects as go
 import plotly.express as px
-from sklearn.preprocessing import StandardScaler
+from scikit-learn.preprocessing import StandardScaler
 From utils import create_confusion_matrix_heatmap, plot_conf_rates, plot_data, create_selectbox, run_PCA, plot_no_loadings, plot_loadingsutils
 
 ### IMPORT DATA FILES ###
