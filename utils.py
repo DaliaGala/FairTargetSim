@@ -99,7 +99,7 @@ def run_PCA(df, drop_1, drop_2, retain_this, n):
     principalDf = pd.DataFrame(data = principalComponents, columns = ['principal component 1', 'principal component 2'])
   else:
     principalDf = pd.DataFrame(data = principalComponents, columns = ['principal component 1', 'principal component 2', 'principal component 3'])
-  finalDf = pd.concat([principalDf, PCA_df[[retain_this]]], axis = 1)
+  finalDf = pd.concat([principalDf, df[[retain_this]]], axis = 1)
   finalDf2 = finalDf.rename(columns = {retain_this : 'target'})
   coeff = np.transpose(pca.components_[0:2, :])
   return pca, finalDf2, labels, coeff, principalComponents
