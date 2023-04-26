@@ -8,3 +8,4 @@ python-math
 matplotlib_venn
 adjustText
 scikit-learn
+statsmodels
