@@ -15,7 +15,7 @@ from sklearn.decomposition import PCA
 import plotly.graph_objects as go
 import plotly.express as px
 from sklearn.preprocessing import StandardScaler
-from utils import create_confusion_matrix_heatmap, plot_conf_rates, plot_data, create_selectbox, run_PCA, plot_no_loadings, plot_loadingsutils
+from utils import create_confusion_matrix_heatmap, plot_conf_rates, plot_data, create_selectbox, run_PCA, plot_no_loadings, plot_loadings
 
 ### IMPORT DATA FILES ###
 df = pd.read_csv('./data/dataframe.csv')
