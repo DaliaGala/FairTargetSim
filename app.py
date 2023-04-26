@@ -236,17 +236,17 @@ def data_vis():
     row1_space1, row1_1, row1_space2, row1_2, row1_space3, row1_3, row1_space4= st.columns((0.1, 4, 0.1, 4, 0.1, 4, 0.1))
     with row1_1:
       st.subheader("Model A PCA")
-      pcaA, dfA, labelsA, coeffA, componentsA = run_PCA('Model_B_label', 'Model_C_label', 'Model_A_label', 2)
+      pcaA, dfA, labelsA, coeffA, componentsA = run_PCA(PCA_df, 'Model_B_label', 'Model_C_label', 'Model_A_label', 2)
       plot_no_loadings(dfA)
 
     with row1_2:
       st.subheader("Model B PCA")
-      pcaB, dfB, labelsB, coeffB, componentsB = run_PCA('Model_A_label', 'Model_C_label', 'Model_B_label', 2)
+      pcaB, dfB, labelsB, coeffB, componentsB = run_PCA(PCA_df, 'Model_A_label', 'Model_C_label', 'Model_B_label', 2)
       plot_no_loadings(dfB)
     
     with row1_3:
       st.subheader("Model C PCA")
-      pcaC, dfC, labelsC, coeffC, componentsC = run_PCA('Model_A_label', 'Model_B_label', 'Model_C_label', 2)
+      pcaC, dfC, labelsC, coeffC, componentsC = run_PCA(PCA_df, 'Model_A_label', 'Model_B_label', 'Model_C_label', 2)
       plot_no_loadings(dfC)
 
   with tab2:
