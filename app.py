@@ -166,7 +166,8 @@ This dataset was, naturally, not labelled in the context of a hiring algorithm. 
   c1, c2 = st.columns(2)
 
   with c1:
-    4. Based on these weighted scores, for each model we remove the bottom 85% of scores and assign a linearly increasing likelihood of being selected when score increases to the top 15% (see figure).
+    st.write(
+      """ 4. Based on these weighted scores, for each model we remove the bottom 85% of scores and assign a linearly increasing likelihood of being selected when score increases to the top 15% (see figure).""")
   with c2:
     st.image('./images/model_image.PNG', use_column_width = True)
 
