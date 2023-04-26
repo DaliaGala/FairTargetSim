@@ -140,13 +140,39 @@ To tackle these problems, we have designed a new paradigm for hiring by the mach
       """
   )
 
+  # Set columns
+  c1, c2 = st.columns(2)
+
   st.subheader('Methodology')
-  st.write(
+  with c1:
+    st.write(
       """
-THIS SECTION IS A WORK IN PROGRESS AND IS NOT FINISHED
-      Here we describe and link the [**NCPT paper**](https://www.nature.com/articles/s41597-022-01872-8). We describe how we labelled the data.
+Due to the nature of our work and the data related to it, it proved challenging to find an open-source labelled dataset pertaining to hiring. Drawing on the examples of gamified algorithms, we explored datasets related to cognitive challenges and came across the [**NCPT dataset**](https://www.nature.com/articles/s41597-022-01872-8). This dataset contains scores from adults who completed the NeuroCognitive Performance Test (NCPT; Lumos Labs, Inc.). This is a self-administered cognitive test which can be performed by adults who sign up for Lumosity training program, aimed at improving memory, attention, flexibility and problem solving of participants. The NCPT is offered to Lumosity participants before they start training to assess their initial abilities. 
+
+This dataset contained between 5 and 11 subtests per data battery. Since these subtests were aimed at examining qualities such as working memory, visual attention, and abstract reasoning, this data struck us as similar enough to what could be collected in gamified assessments. Moreover, this dataset includes basic demographic information from each participant, which was necessary for the realisation of our goals.
+
+This dataset was, naturally, not labelled in the context of a hiring algorithm. We were therefore presented with the challenge of applying class labels in order to be able to produce models. We applied binary class labels. We wanted to label participants as having a label "0", which would mean that this participant would not be selected for the job position or interview, and a label of "1", which would mean that the participant would be selected. Moreover, we wanted to have more than 1 way of deciding how these labels will be administered. We prepared 3 datasets, which we subsequently refer to as A, B and C, each with different distribution of positive and negative labels. This distribution was achieved by calculating different weighted averages of the subtest results for each test. Below, we describe the process by which we assigned these labels:
+
+1. We selected the data battery from the NCPT dataset with the largest number of subtests to maximise the number of available features. This was battery 26, with 11 features.
+
+2. We then created subgroups of subtests from this battery. In this process, we tried to mimic the logic of what 3 different hiring managers might consider important to their selection of candidates. We assumed the 3 hiring managers might agree on some characteristics of the candidates and deem them necessary for each candidate. We assumed that some tests will be the ones which measure these characteristics, and that, by proxy, all 3 managers will agree that selected candidates will have to have high scores in these tests. These tests (n=5) were Grammatical Reasoning test, Trail Making A, Trail Making B, Forward memory test, Reverse memory test. Each test in this group was assigned a weight of 6.4% in the weighted average. The total weight of these tests in the weighted average score for each model A, B and C was therefore 32%.
+
+3. We then selected 3 groups of 2 tests each which were to be the distinguishing tests between the models. We selected these groups by the logic that while all 3 hiring managers might agree on some of the characteristics of the candidates, they might disagree on others. In this hypothetical scenario, we therefore reasoned that:
+
+- manager A thinks that quantitative skills and focus are important; in this model, Arithmetic reasoning test and Divided visual attention tests are given the weight of 25% each, for a total of 50%; the remaining 4 tests have a weight of 4.5%
+
+- manager A thinks that memory and recall are most important; in this model, Verbal list learning and Delayed verbal lists learning tests are given the weight of 25% each, for a total of 50%; the remaining 4 tests have a weight of 4.5%
+
+- manager A thinks that behavioural restraint and quick information processing skills are key; in this model, the response inhibition test (Go/no go) and the information processing speed test (Digit symbol coding) are given the weight of 25% each, for a total of 50%; the remaining 4 tests have a weight of 4.5%
+
+4. Based on these weighted scores, for each model we remove the bottom 85% of scores and assign a linearly increasing likelihood of being selected when score increases to the top 15% (see figure).
+
+5. We then label 100 candidates according to this probability in the top 15% with the label "1". The remaining candidates have the label "0".
+
       """
   )
+  with c2:
+    st.image('./images/model_image.PNG', use_column_width = True)
 
   st.subheader('Future Works')
   st.write(
