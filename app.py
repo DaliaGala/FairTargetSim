@@ -59,8 +59,8 @@ colours_gender = {
         }
 
 characteristic_dict = {
-          'education_level' : colours_education,
           'gender' : colours_gender,
+          'education_level' : colours_education,
           'country' : colours_country,
           'age' : 'indigo'
         }
