@@ -417,12 +417,12 @@ def model_out():
   tab1, tab2, tab3 = st.tabs(["Characteristics", "Data", "Venn Diagram"])
       
   with tab1:
+     # Create a selectbox to choose a protected characteristic to explore
+     selectbox = create_selectbox('Characteristic to explore - model A', characteristic_dict.keys())
+
     row1_space1, row1_1, row1_space2, row1_2, row1_space3, row1_3, row1_space4 = st.columns((0.1, 1, 0.1, 1, 0.1, 1, 0.1))
     with row1_1:
       st.subheader("Model A")
-
-      # Create a selectbox to choose a protected characteristic to explore
-      selectbox = create_selectbox('Characteristic to explore - model A', characteristic_dict.keys())
 
       # Select test data
       data = df.loc[df['Predicted_A'] == "1"]
@@ -433,9 +433,6 @@ def model_out():
   with row1_2:
       st.subheader("Model B")
 
-      # Create a selectbox to choose a protected characteristic to explore
-      selectbox = create_selectbox('Characteristic to explore - model B', characteristic_dict.keys())
-
       # Select test data
       data = df.loc[df['Predicted_B'] == "1"]
 
@@ -444,9 +441,6 @@ def model_out():
   
   with row1_3:
       st.subheader("Model C")
-
-      # Create a selectbox to choose a protected characteristic to explore
-      selectbox = create_selectbox('Characteristic to explore - model C', characteristic_dict.keys())
 
       # Select test data
       data = df.loc[df['Predicted_C'] == "1"]
