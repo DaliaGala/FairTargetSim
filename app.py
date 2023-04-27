@@ -96,7 +96,7 @@ color_dict = {0: 'lightseagreen',
           10 : 'slateblue',
           11 : 'mediumblue'}
 
-protected_chars = ['education_level', 'country', 'age', 'gender']
+protected_chars = ['gender', 'education_level', 'country', 'age']
 models = ['Model A', 'Model B', 'Model C']
 
 ### CREATE THE "ABOUT" PAGE ###
