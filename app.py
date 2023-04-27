@@ -190,7 +190,7 @@ st.sidebar.markdown("Contents")
 with st.sidebar:
     add_radio = st.radio(
         "Choose option: explore input data",
-        ("About", "Model scores", "Data exploration", "Model labels distribution", "Model confusion matrices", "Model outcomes")
+        ("About", "Model outcomes", "Input data", "Data exploration", "Model labels distribution", "Model confusion matrices")
     )
 
 ### CREATE THE "DATA VISUALISATION" PAGE ###
@@ -508,5 +508,5 @@ if add_radio == "Model labels distribution":
   model_vis()
 if add_radio == "Model outcomes":
   model_out()
-if add_radio == "Model scores":
+if add_radio == "Input data":
   data_plot()
