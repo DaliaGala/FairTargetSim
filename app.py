@@ -415,11 +415,11 @@ def mod_prop():
 def model_out():
   st.subheader('What do the different models select?')
   tab1, tab2, tab3 = st.tabs(["Characteristics", "Data", "Venn Diagram"])
+
       
   with tab1:
-     # Create a selectbox to choose a protected characteristic to explore
-     selectbox = create_selectbox('Characteristic to explore - model A', characteristic_dict.keys())
-
+    # Create a selectbox to choose a protected characteristic to explore
+    selectbox = create_selectbox('Characteristic to explore - model A', characteristic_dict.keys())
     row1_space1, row1_1, row1_space2, row1_2, row1_space3, row1_3, row1_space4 = st.columns((0.1, 1, 0.1, 1, 0.1, 1, 0.1))
     with row1_1:
       st.subheader("Model A")
@@ -430,7 +430,7 @@ def model_out():
       # Use function plot_data to plot selected data
       plot_data(data, selectbox, characteristic_dict[selectbox])
 
-  with row1_2:
+    with row1_2:
       st.subheader("Model B")
 
       # Select test data
@@ -439,7 +439,7 @@ def model_out():
       # Use function plot_data to plot selected data
       plot_data(data, selectbox, characteristic_dict[selectbox])
   
-  with row1_3:
+    with row1_3:
       st.subheader("Model C")
 
       # Select test data
