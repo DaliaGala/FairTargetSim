@@ -86,8 +86,8 @@ def plot_data(data, protected_characteristic, colour_code):
       fig.update_layout(margin=dict(l=20, r=20, t=30, b=0))
       st.plotly_chart(fig, use_container_width=True)
 
-def create_selectbox(title, options, index = None):
-  selectbox = st.selectbox(title, options, index)
+def create_selectbox(title, options):
+  selectbox = st.selectbox(title, options, index = 0)
   return selectbox
 
 def run_PCA(df, drop_1, drop_2, retain_this, n):
