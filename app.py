@@ -271,7 +271,6 @@ def data_vis():
   tab1, tab2, tab3 = st.tabs(["PCA", "Components loadings - PCA", "Data charactertistics"])
 
   with tab1:
-    plot_no_loadings(dfA)
     st.subheader("Principal components analysis")
     st.subheader("Model A PCA")
     pcaA, dfA, labelsA, coeffA, componentsA = run_PCA(PCA_df,'Model_B_label', 'Model_C_label', 'Model_A_label', 3)
