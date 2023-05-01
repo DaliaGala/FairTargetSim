@@ -271,42 +271,52 @@ def data_vis():
   tab1, tab2, tab3 = st.tabs(["PCA", "Components loadings - PCA", "Data charactertistics"])
 
   with tab1:
-    row1_space1, row1_1, row1_space2, row1_2, row1_space3, row1_3, row1_space4= st.columns((0.1, 2, 0.1, 2, 0.1, 2, 0.1))
-    with row1_1:
-      st.subheader("Model A PCA")
-      pcaA, dfA, labelsA, coeffA, componentsA = run_PCA(PCA_df, 'Model_B_label', 'Model_C_label', 'Model_A_label', 2)
-      plot_no_loadings(dfA)
-
-    with row1_2:
-      st.subheader("Model B PCA")
-      pcaB, dfB, labelsB, coeffB, componentsB = run_PCA(PCA_df, 'Model_A_label', 'Model_C_label', 'Model_B_label', 2)
-      plot_no_loadings(dfB)
-    
-    with row1_3:
-      st.subheader("Model C PCA")
-      pcaC, dfC, labelsC, coeffC, componentsC = run_PCA(PCA_df, 'Model_A_label', 'Model_B_label', 'Model_C_label', 2)
-      plot_no_loadings(dfC)
+    st.subheader("Model A PCA")
+    pcaA, dfA, labelsA, coeffA, componentsA = run_PCA(PCA_df, 'Model_B_label', 'Model_C_label', 'Model_A_label', 2)
+    plot_no_loadings(dfA)
+    st.subheader("Principal components analysis")
+    st.subheader("Model A PCA")
+    pcaA, dfA, labelsA, coeffA, componentsA = run_PCA('Model_B_label', 'Model_C_label', 'Model_A_label', 3)
+  
+    total_var = pcaA.explained_variance_ratio_.sum() * 100
+  
+    fig = px.scatter_3d(
+          componentsA, x=0, y=1, z=2, color=dfA['target'],
+          title=f'Total Explained Variance: {total_var:.2f}%',
+          labels={'0': 'PC 1', '1': 'PC 2', '2': 'PC 3'}
+      )
+    fig.update_traces(marker_size = 5)
+    st.plotly_chart(fig)
 
   with tab2:
-    row1_space1, row1_1, row1_space2 = st.columns((1, 4, 1))
-
-    with row1_1:
-      st.subheader("PCA - component loadings")
-      pcaC, dfC, labelsC, coeffC, componentsC = run_PCA(PCA_df, 'Model_A_label', 'Model_B_label', 'Model_C_label', 2)
-      fig = plt.figure(figsize = (6,6))
-      ax = fig.add_subplot(1,1,1) 
-      ax.set_xlabel('Principal Component 1', fontsize = 12)
-      ax.set_ylabel('Principal Component 2', fontsize = 12)
-      ax.set_title('2 component PCA', fontsize = 12)
-      ax.tick_params(axis='both', which='major', labelsize=8)
-      ax.tick_params(axis='both', which='minor', labelsize=8)
-      plt.scatter(dfC['principal component 1'], dfC['principal component 2'], c = 'orange', s = 10, alpha = 0.6)
-      for i in range(coeffC.shape[0]):
-        plt.arrow(0, 0, coeffC[i,0], coeffC[i,1], width = 0.01, color=color_dict[i])
-        texts = [plt.text(coeffC[i, 0], coeffC[i, 1], labelsC[i], ha='center', va='center', fontsize = 'small', fontvariant = 'small-caps', fontweight = 'bold', color=color_dict[i]) for i in range(coeffC.shape[0])]
-        adjust_text(texts)
-      plt.grid()
-      st.pyplot(fig)
+    st.subheader("Model C PCA")
+    pcaC, dfC, labelsC, coeffC, componentsC = run_PCA('Model_A_label', 'Model_B_label', 'Model_C_label', 2)
+    loadings = pcaC.components_.T * np.sqrt(pcaC.explained_variance_)
+    
+    fig = px.scatter(componentsC, x=0, y=1)
+    
+    for i, feature in enumerate(labelsC):
+        fig.add_annotation(
+            ax=0, ay=0,
+            axref="x", ayref="y",
+            x=loadings[i, 0],
+            y=loadings[i, 1],
+            showarrow=True,
+            arrowsize=2,
+            arrowhead=2,
+            xanchor="right",
+            yanchor="top"
+        )
+        fig.add_annotation(
+            x=loadings[i, 0],
+            y=loadings[i, 1],
+            ax=0, ay=0,
+            xanchor="center",
+            yanchor="bottom",
+            text=feature,
+            yshift=5
+        )
+    st.plotly_chart(fig)
 
 
   with tab3:
