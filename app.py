@@ -143,7 +143,8 @@ To tackle these problems, we have designed a new paradigm for hiring by the mach
   )
 
 
-  st.subheader('Methodology')
+  st.header('Methodology')
+  st.subheader('Data labelling')
   st.write(
       """
 Due to the nature of our work and the data related to it, it proved challenging to find an open-source labelled dataset pertaining to hiring. Drawing on the examples of gamified algorithms, we explored datasets related to cognitive challenges and came across the [**NCPT dataset**](https://www.nature.com/articles/s41597-022-01872-8). This dataset contains scores from adults who completed the NeuroCognitive Performance Test (NCPT; Lumos Labs, Inc.). This is a self-administered cognitive test which can be performed by adults who sign up for Lumosity training program, aimed at improving memory, attention, flexibility and problem solving of participants. The NCPT is offered to Lumosity participants before they start training to assess their initial abilities. 
@@ -160,23 +161,29 @@ This dataset was, naturally, not labelled in the context of a hiring algorithm. 
 
 - manager A thinks that quantitative skills and focus are important; in this model, Arithmetic reasoning test and Divided visual attention tests are given the weight of 25% each, for a total of 50%; the remaining 4 tests have a weight of 4.5%
 
-- manager A thinks that memory and recall are most important; in this model, Verbal list learning and Delayed verbal lists learning tests are given the weight of 25% each, for a total of 50%; the remaining 4 tests have a weight of 4.5%
+- manager B thinks that memory and recall are most important; in this model, Verbal list learning and Delayed verbal lists learning tests are given the weight of 25% each, for a total of 50%; the remaining 4 tests have a weight of 4.5%
 
-- manager A thinks that behavioural restraint and quick information processing skills are key; in this model, the response inhibition test (Go/no go) and the information processing speed test (Digit symbol coding) are given the weight of 25% each, for a total of 50%; the remaining 4 tests have a weight of 4.5%""")
+- manager C thinks that behavioural restraint and quick information processing skills are key; in this model, the response inhibition test (Go/no go) and the information processing speed test (Digit symbol coding) are given the weight of 25% each, for a total of 50%; the remaining 4 tests have a weight of 4.5%""")
 
   # Set columns
   c1, c2 = st.columns(2)
 
   with c1:
     st.write(
-      """ 4. Based on these weighted scores, for each model we remove the bottom 85% of scores and assign a linearly increasing likelihood of being selected when score increases to the top 15% (see figure).""")
+      """ 4. Based on these weighted scores, for each dataset A, B and C we remove the bottom 85% of scores and assign a linearly increasing likelihood of being selected when score increases to the top 15% (see figure).""")
   with c2:
     st.image('./images/model_image.PNG', use_column_width = True)
 
   #Project description
-  st.write(""" 5. We then label 100 candidates according to this probability in the top 15% with the label "1". The remaining candidates have the label "0".""")
-
-  st.subheader('Future Works')
+  st.write(""" 5. For each dataset A, B and C, we then label 100 candidates according to this probability in the top 15% with the label "1". The remaining candidates have the label "0".""")
+  
+  st.subheader('Modelling')
+  st.write(
+      """Having labelled the datasets A, B and C with weighted scores obratined from the existing features, we then train 3 different models A, B and C based on this data. Each model captures a different definition of what features are being sought after in a successful employee, ergo, a different way of defining the target variable for each model A, B and C.
+      Each model is an SVM, or a [**Support Vector Machine**](https://en.wikipedia.org/wiki/Support_vector_machine), which is the same type of model as used by some companies which do game-based candidate assesment.
+      We then aim to compare these models both in terms of their performance, but also, more specifically, with respect to the target demographics which they select. This is what is presented on this website, and can be explored in an interactive way.""")
+  
+  st.header('Future Works')
   st.write(
       """
 THIS SECTION IS A WORK IN PROGRESS AND IS NOT FINISHED
