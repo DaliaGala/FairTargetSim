@@ -271,12 +271,10 @@ def data_vis():
   tab1, tab2, tab3 = st.tabs(["PCA", "Components loadings - PCA", "Data charactertistics"])
 
   with tab1:
-    st.subheader("Model A PCA")
-    pcaA, dfA, labelsA, coeffA, componentsA = run_PCA(PCA_df, 'Model_B_label', 'Model_C_label', 'Model_A_label', 2)
     plot_no_loadings(dfA)
     st.subheader("Principal components analysis")
     st.subheader("Model A PCA")
-    pcaA, dfA, labelsA, coeffA, componentsA = run_PCA('Model_B_label', 'Model_C_label', 'Model_A_label', 3)
+    pcaA, dfA, labelsA, coeffA, componentsA = run_PCA(PCA_df,'Model_B_label', 'Model_C_label', 'Model_A_label', 3)
   
     total_var = pcaA.explained_variance_ratio_.sum() * 100
   
@@ -290,7 +288,7 @@ def data_vis():
 
   with tab2:
     st.subheader("Model C PCA")
-    pcaC, dfC, labelsC, coeffC, componentsC = run_PCA('Model_A_label', 'Model_B_label', 'Model_C_label', 2)
+    pcaC, dfC, labelsC, coeffC, componentsC = run_PCA(PCA_df, 'Model_A_label', 'Model_B_label', 'Model_C_label', 2)
     loadings = pcaC.components_.T * np.sqrt(pcaC.explained_variance_)
     
     fig = px.scatter(componentsC, x=0, y=1)
