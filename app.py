@@ -15,23 +15,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 import statsmodels.api as sm
 from sklearn.preprocessing import StandardScaler
-from utils import create_confusion_matrix_heatmap, plot_conf_rates, plot_data, create_selectbox, run_PCA, plot_no_loadings, plot_loadings
-
-### IMPORT DATA FILES ###
-df = pd.read_csv('./data/dataframe.csv')
-cm_A = pd.read_csv('./data/cm_A.csv')
-cm_A = cm_A.drop(["Unnamed: 0.1", "Unnamed: 0"], axis = 1)
-cm_B = pd.read_csv('./data/cm_B.csv')
-cm_B = cm_B.drop(["Unnamed: 0.1", "Unnamed: 0"], axis = 1)
-cm_C= pd.read_csv('./data/cm_C.csv')
-cm_C = cm_C.drop(["Unnamed: 0.1", "Unnamed: 0"], axis = 1)
-PCA_df = pd.read_csv('./data/dataframe_PCA.csv')
-PCA_df = PCA_df.drop(["Unnamed: 0"], axis = 1)
-model_scores_df = pd.read_csv('./data/model_scores.csv')
-
-### PAGE CONFIG ###
-st.set_page_config(page_title='EquiVar', page_icon=':robot_face:', layout='wide')
-
+from utils import create_confusion_matrix_heatmap, plot_conf_rates, assign_labels_by_probabilities, drop_data_exp_2, train_and_predict, plot_data, run_PCA
 
 ### DICTIONARIES AND CONSTANTS ###
 colours_education = {
@@ -67,20 +51,17 @@ characteristic_dict = {
 
 model_dict = {
           'Model A' : 'Model_A_label',
-          'Model B' : 'Model_B_label',
-          'Model C' : 'Model_C_label'
+          'Model B' : 'Model_B_label'
         }
 
 pred_dict = {
           'Model A' : 'Predicted_A',
-          'Model B' : 'Predicted_B',
-          'Model C' : 'Predicted_C'
+          'Model B' : 'Predicted_B'
         }
 
 prob_dict = {
           'Model A' : 'Prob_1_A',
-          'Model B' : 'Prob_1_B',
-          'Model C' : 'Prob_1_C'
+          'Model B' : 'Prob_1_B'
         }
 
 color_dict = {0: 'lightseagreen',
@@ -96,15 +77,47 @@ color_dict = {0: 'lightseagreen',
           10 : 'slateblue',
           11 : 'mediumblue'}
 
-protected_chars = ['gender', 'education_level', 'country', 'age']
-models = ['Model A', 'Model B', 'Model C']
+protected_chars = ['education_level', 'country', 'age', 'gender']
+models = ['Model A', 'Model B']
+
+groups_dict = {
+          'divided_visual_attention' : 'attention',
+          'forward_memory_span': 'memory',
+          'arithmetic_problem_solving' : 'reasoning',
+          'logical_reasoning' : 'reasoning',
+          'adaptive_behaviour_response_inhibition' : 'behavioural restraint',
+          'reverse_memory_span' : 'memory',
+          'episodic_verbal_learning' : 'memory',
+          'delayed_recall' : 'memory',
+          'abstract_symbol_processing_speed' : 'information processing speed',
+          'numerical_info_processing_speed' : 'information processing speed',
+          'numerical_and_lexical_info_processing_speed' : 'information processing speed'
+        }
+
+education_dict = {
+    1: 'Some high school',
+    2: 'High school diploma / GED',
+    3: 'Some college',
+    4: 'College degree',
+    5: 'Professional degree',
+    6: "Master's degree",
+    7: 'Ph.D.',
+    8: "Associate's degree",
+    99: 'Other'
+  }
+
+### IMPORT DATA FILES ###
+dataframe = pd.read_csv('./dataframe.csv')
+dataframe = dataframe.drop(["Unnamed: 0"], axis = 1)
+dataframe = dataframe.drop(["Unnamed: 0.1"], axis = 1)
+
+### PAGE CONFIG ###
+st.set_page_config(page_title='EquiVar', page_icon=':robot_face:', layout='wide')
 
 ### CREATE THE "ABOUT" PAGE ###
-
 def about():
   #Set title
   st.title('EquiVar - a new paradigm in hiring by machine')
-
   # Set columns
   c1, c2, c3, c4 = st.columns(4)
 
@@ -117,10 +130,9 @@ def about():
       st.info('**Accenture team: [@The Dock](https://www.accenture.com/gb-en/services/about/innovation-hub-the-dock)**')
   with c4:
       st.info('**GitHub: [Hiring-model](https://github.com/DaliaGala/Hiring-model)**')
-      
-      
-      #Project description
 
+  #Project description
+  st.subheader('Motivation')
   st.write(
       """
             Hiring applications often require for recruiters and employers to sift through a large volume of applications. With the progress in the development of more sophisticated machine learning algorithms, companies are becoming more reliant on such systems to produce lists of candidates who could be potential hires. These algorithms can, for example, rely on keyword matching for candidate CVs and job requirements. Recently, a new type of algorithms are becoming more extensively used, which try to deploy games, riddles and challenges to capture some of the candidates' qualities. Through these, companies can assess the candidates' capacities by comparing their results to those of successful incumbent successful employees.
@@ -141,385 +153,455 @@ To tackle these problems, we have designed a new paradigm for hiring by the mach
 
       """
   )
-
-
-  st.header('Methodology')
-  st.subheader('Data labelling')
+  st.subheader('Methodology')
   st.write(
       """
 Due to the nature of our work and the data related to it, it proved challenging to find an open-source labelled dataset pertaining to hiring. Drawing on the examples of gamified algorithms, we explored datasets related to cognitive challenges and came across the [**NCPT dataset**](https://www.nature.com/articles/s41597-022-01872-8). This dataset contains scores from adults who completed the NeuroCognitive Performance Test (NCPT; Lumos Labs, Inc.). This is a self-administered cognitive test which can be performed by adults who sign up for Lumosity training program, aimed at improving memory, attention, flexibility and problem solving of participants. The NCPT is offered to Lumosity participants before they start training to assess their initial abilities. 
 
 This dataset contained between 5 and 11 subtests per data battery. Since these subtests were aimed at examining qualities such as working memory, visual attention, and abstract reasoning, this data struck us as similar enough to what could be collected in gamified assessments. Moreover, this dataset includes basic demographic information from each participant, which was necessary for the realisation of our goals.
 
-This dataset was, naturally, not labelled in the context of a hiring algorithm. We were therefore presented with the challenge of applying class labels in order to be able to produce models. We applied binary class labels. We wanted to label participants as having a label "0", which would mean that this participant would not be selected for the job position or interview, and a label of "1", which would mean that the participant would be selected. Moreover, we wanted to have more than 1 way of deciding how these labels will be administered. We prepared 3 datasets, which we subsequently refer to as A, B and C, each with different distribution of positive and negative labels. This distribution was achieved by calculating different weighted averages of the subtest results for each test. Below, we describe the process by which we assigned these labels:
-
-1. We selected the data battery from the NCPT dataset with the largest number of subtests to maximise the number of available features. This was battery 26, with 11 features.
-
-2. We then created subgroups of subtests from this battery. In this process, we tried to mimic the logic of what 3 different hiring managers might consider important to their selection of candidates. We assumed the 3 hiring managers might agree on some characteristics of the candidates and deem them necessary for each candidate. We assumed that some tests will be the ones which measure these characteristics, and that, by proxy, all 3 managers will agree that selected candidates will have to have high scores in these tests. These tests (n=5) were Grammatical Reasoning test, Trail Making A, Trail Making B, Forward memory test, Reverse memory test. Each test in this group was assigned a weight of 6.4% in the weighted average. The total weight of these tests in the weighted average score for each model A, B and C was therefore 32%.
-
-3. We then selected 3 groups of 2 tests each which were to be the distinguishing tests between the models. We selected these groups by the logic that while all 3 hiring managers might agree on some of the characteristics of the candidates, they might disagree on others. In this hypothetical scenario, we therefore reasoned that:
-
-- manager A thinks that quantitative skills and focus are important; in this model, Arithmetic reasoning test and Divided visual attention tests are given the weight of 25% each, for a total of 50%; the remaining 4 tests have a weight of 4.5%
-
-- manager B thinks that memory and recall are most important; in this model, Verbal list learning and Delayed verbal lists learning tests are given the weight of 25% each, for a total of 50%; the remaining 4 tests have a weight of 4.5%
-
-- manager C thinks that behavioural restraint and quick information processing skills are key; in this model, the response inhibition test (Go/no go) and the information processing speed test (Digit symbol coding) are given the weight of 25% each, for a total of 50%; the remaining 4 tests have a weight of 4.5%""")
-
-  # Set columns
-  c1, c2 = st.columns(2)
-
-  with c1:
-    st.write(
-      """ 4. Based on these weighted scores, for each dataset A, B and C we remove the bottom 85% of scores and assign a linearly increasing likelihood of being selected when score increases to the top 15% (see figure).""")
-  with c2:
-    st.image('./images/model_image.PNG', use_column_width = True)
-
-  #Project description
-  st.write(""" 5. For each dataset A, B and C, we then label 100 candidates according to this probability in the top 15% with the label "1". The remaining candidates have the label "0".""")
-  
-  st.subheader('Modelling')
-  st.write(
-      """Having labelled the datasets A, B and C with weighted scores obratined from the existing features, we then train 3 different models A, B and C based on this data. Each model captures a different definition of what features are being sought after in a successful employee, ergo, a different way of defining the target variable for each model A, B and C.
-      Each model is an SVM, or a [**Support Vector Machine**](https://en.wikipedia.org/wiki/Support_vector_machine), which is the same type of model as used by some companies which do game-based candidate assesment.
-      We then aim to compare these models both in terms of their performance, but also, more specifically, with respect to the target demographics which they select. This is what is presented on this website, and can be explored in an interactive way.""")
-  
-  st.header('Future Works')
-  st.write(
-      """
-THIS SECTION IS A WORK IN PROGRESS AND IS NOT FINISHED
-      Here we describe our collab with Accenture, and potential future applications of the project.
-      """
-  )
-
+This dataset was, naturally, not labelled in the context of a hiring algorithm. This presented us with a perfect opportunity to utilise it to demonstrate how the varying importance of these subtests - and therefore the characteristics which they examine - affects the definition
+of the target variable. We allow you to try to decide which characteristics you think should count for an employee to be deemed "successful". You can create two toy hiring models and observe how your choices impact
+the target demographics. For more details, and to create your models, head to the "Define target variable" section in the sidebar. For more details, read our paper.""")
 
 ### CREATE THE SIDEBAR ###
-
 st.sidebar.markdown("Contents")
 
 # Add selection to the sidebar
 with st.sidebar:
     add_radio = st.radio(
         "Choose option: explore input data",
-        ("About", "Model outcomes", "Input data", "Data exploration", "Model labels distribution", "Model confusion matrices")
+        ("About", "Define target variable", "Visualise your models")
     )
-    
-    
 
 ### CREATE THE "DATA VISUALISATION" PAGE ###
 
-def data_plot():
-  st.subheader('Visualising the demographics data vs score per model')
-  st.write("""In this section we look at the input data for each model. What is the relationship between the scores which were calculated for each candidate based on selection criteria when compared between different protected groups? An interesting observation which was also made by the authors of the [**NCPT paper**](https://www.nature.com/articles/s41597-022-01872-8) was that the scores per individual game, but also the overall scores, negatively correlate with age. Therefore, it appears that gamified assessments have the potential to disadvantage older applicants from the get-go, if we assume that the conclusions from the NCPT dataset extend to other games which might be played in gamified hiring assessments.""")
+def model_scores(key1):
 
   # Create a selectbox to choose a protected characteristic to explore
-  selectbox_Char = create_selectbox('Characteristic to explore', characteristic_dict.keys())
-
+  plot_radio = st.radio('Characteristic to explore', characteristic_dict.keys(), horizontal=True)
   row2_space1, row2_1, row2_space2 = st.columns((0.1, 5, 0.1))
 
-  with row2_1:
-    # st.subheader("Model A")
-    # data = model_scores_df[["model_A_scores", selectbox_Char]]
-    # fig = px.box(data, x = selectbox_Char, y="model_A_scores", color=selectbox_Char)
-    # st.plotly_chart(fig, use_container_width=True)
-    data = model_scores_df[["model_A_scores", "model_B_scores", "model_C_scores", selectbox_Char]]
+  if key1 not in st.session_state:
+    st.error('Cannot train the model if you do not define the target variable. Make your selections first!', icon="🚨")
+  else:
+    dataframe = st.session_state[key1]
 
-    if selectbox_Char == "age":
-      selectbox_Mod = create_selectbox('Choose model', ("Model A", "Model B", "Model C"))
-      if selectbox_Mod == "Model A":
-        fig = px.scatter(data, x=data['age'], y="model_A_scores", trendline="ols")
-        st.write(fig)
-      elif selectbox_Mod == "Model B":
-        fig = px.scatter(data, x=data['age'], y="model_B_scores", trendline="ols")
-        st.write(fig)
+    with row2_1:
+      data = dataframe[["model_A_scores", "model_B_scores", plot_radio]]
+
+      if plot_radio == "age":
+        selectbox_Mod = st.selectbox('Choose model', ("Model A", "Model B"))
+        if selectbox_Mod == "Model A":
+          fig = px.scatter(data, x=data['age'], y="model_A_scores", trendline="ols")
+          st.write(fig)
+        else:
+          fig = px.scatter(data, x=data['age'], y="model_B_scores", trendline="ols")
+          st.write(fig)
+              
       else:
-        fig = px.scatter(data, x=data['age'], y="model_C_scores", trendline="ols")
+        
+        fig = go.Figure(layout=go.Layout(height=700, width=900))
+
+        fig.add_trace(go.Box(
+            y = data["model_A_scores"],
+            x = data[plot_radio],
+            name = 'Model A Scores',
+            marker_color = '#3D9970'
+        ))
+        fig.add_trace(go.Box(
+            y = data["model_B_scores"],
+            x = data[plot_radio],
+            name = 'Model B Scores',
+            marker_color='#FF4136'
+        ))
+
+        fig.update_layout(
+            yaxis_title='model scores',
+            boxmode='group' # group together boxes of the different traces for each value of x
+        )
         st.write(fig)
-            
-    else:
-      
-      fig = go.Figure(layout=go.Layout(height=700, width=900))
 
-      fig.add_trace(go.Box(
-          y = data["model_A_scores"],
-          x = data[selectbox_Char],
-          name = 'Model A Scores',
-          marker_color = '#3D9970'
-      ))
-      fig.add_trace(go.Box(
-          y = data["model_B_scores"],
-          x = data[selectbox_Char],
-          name = 'Model B Scores',
-          marker_color='#FF4136'
-      ))
-      fig.add_trace(go.Box(
-          y = data["model_C_scores"],
-          x = data[selectbox_Char],
-          name = 'Model C Scores',
-          marker_color='#FF851B'
-      ))
+def data_vis(key1, key2):
+  add_radio = st.radio("Choose option: explore train and test data", ("PCA", "Component loadings - PCA", "Data charactertistics"), horizontal=True)
 
-      fig.update_layout(
-          yaxis_title='model scores',
-          boxmode='group' # group together boxes of the different traces for each value of x
-      )
-      st.write(fig)
+  if key2 not in st.session_state:
+    st.error('Cannot train the model if you do not define the target variable. Make your selections first!', icon="🚨")
+  else:
+    dataframe_PCA = st.session_state[key2]
+    full_df = st.session_state[key1]
 
-### CREATE THE "DATA VISUALISATION" PAGE ###
+    if add_radio == "PCA":
+      selectbox = st.selectbox('Model to explore', ('Model A', 'Model B'))
 
-def data_vis():
-  st.subheader('Visualising the demographics of the training and test data')
-  tab1, tab2, tab3 = st.tabs(["PCA", "Components loadings - PCA", "Data charactertistics"])
+      if selectbox == 'Model A':
+        pcaA, dfA, labelsA, coeffA, componentsA = run_PCA(dataframe_PCA, 'Model_B_label', 'Model_A_label', 3)
 
-  with tab1:
-    st.subheader("Principal components analysis")
-    st.subheader("Model A PCA")
-    pcaA, dfA, labelsA, coeffA, componentsA = run_PCA(PCA_df,'Model_B_label', 'Model_C_label', 'Model_A_label', 3)
-  
-    total_var = pcaA.explained_variance_ratio_.sum() * 100
-  
-    fig = px.scatter_3d(
-          componentsA, x=0, y=1, z=2, color=dfA['target'],
-          title=f'Total Explained Variance: {total_var:.2f}%',
-          labels={'0': 'PC 1', '1': 'PC 2', '2': 'PC 3'}
-      )
-    fig.update_traces(marker_size = 5)
-    st.plotly_chart(fig)
+        total_var = pcaA.explained_variance_ratio_.sum() * 100
 
-  with tab2:
-    st.subheader("Model C PCA")
-    pcaC, dfC, labelsC, coeffC, componentsC = run_PCA(PCA_df, 'Model_A_label', 'Model_B_label', 'Model_C_label', 2)
-    loadings = pcaC.components_.T * np.sqrt(pcaC.explained_variance_)
-    
-    fig = px.scatter(componentsC, x=0, y=1)
-    
-    for i, feature in enumerate(labelsC):
-        fig.add_annotation(
-            ax=0, ay=0,
-            axref="x", ayref="y",
-            x=loadings[i, 0],
-            y=loadings[i, 1],
-            showarrow=True,
-            arrowsize=2,
-            arrowhead=2,
-            xanchor="right",
-            yanchor="top"
+        fig = px.scatter_3d(
+            componentsA, x=0, y=1, z=2, color=dfA['target'],
+            title=f'Total Explained Variance: {total_var:.2f}%',
+            labels={'0': 'PC 1', '1': 'PC 2', '2': 'PC 3'}
         )
-        fig.add_annotation(
-            x=loadings[i, 0],
-            y=loadings[i, 1],
-            ax=0, ay=0,
-            xanchor="center",
-            yanchor="bottom",
-            text=feature,
-            yshift=5
+        fig.update_traces(marker_size = 5)
+        st.plotly_chart(fig)
+      else:
+        pcaB, dfB, labelsB, coeffB, componentsB = run_PCA(dataframe_PCA, 'Model_A_label', 'Model_B_label', 3)
+        total_var = pcaB.explained_variance_ratio_.sum() * 100
+
+        fig = px.scatter_3d(
+            componentsB, x=0, y=1, z=2, color=dfB['target'],
+            title=f'Total Explained Variance: {total_var:.2f}%',
+            labels={'0': 'PC 1', '1': 'PC 2', '2': 'PC 3'}
         )
-    st.plotly_chart(fig)
+        fig.update_traces(marker_size = 5)
+        st.plotly_chart(fig)
 
+    if add_radio == "Component loadings - PCA":
+      pcaB, dfB, labelsB, coeffB, componentsB = run_PCA(dataframe_PCA, 'Model_A_label', 'Model_B_label', 2)
+      loadings = pcaB.components_.T * np.sqrt(pcaB.explained_variance_)
 
-  with tab3:
+      fig = px.scatter(componentsB, x=0, y=1)
+
+      for i, feature in enumerate(labelsB):
+          fig.add_annotation(
+              ax=0, ay=0,
+              axref="x", ayref="y",
+              x=loadings[i, 0],
+              y=loadings[i, 1],
+              showarrow=True,
+              arrowsize=2,
+              arrowhead=2,
+              xanchor="right",
+              yanchor="top"
+          )
+          fig.add_annotation(
+              x=loadings[i, 0],
+              y=loadings[i, 1],
+              ax=0, ay=0,
+              xanchor="center",
+              yanchor="bottom",
+              text=feature,
+              yshift=5
+          )
+      st.plotly_chart(fig)
+
+  if add_radio == "Data charactertistics":
     row1_space1, row1_1, row1_space2, row1_2, row1_space3 = st.columns(
     (0.1, 1, 0.1, 1, 0.1)
     )
+    if key2 not in st.session_state:
+      pass
+    else:
+      dataframe_PCA = st.session_state[key2]
+      full_df = st.session_state[key1]
 
-    # Plot training data
-    with row1_1:
-      st.subheader("Training data")
+      # Plot training data
+      with row1_1:
+        st.subheader("Training data")
 
-      # Select train data
-      train = df.loc[df["Predicted_A"] == "train"]
+        # Select train data
+        train = full_df.loc[full_df["Predicted_A"] == "train"]
 
+        # Create a selectbox to choose a protected characteristic to explore
+        selectbox = st.selectbox('Train characteristic', characteristic_dict.keys())
+
+        # Use function plot_data to plot selected data
+        plot_data(train, selectbox, characteristic_dict[selectbox])
+
+      # Plot test data
+
+      with row1_2:
+        st.subheader("Test data")
+
+        # Select test data
+        test = full_df.loc[full_df["Predicted_A"] != "train"]
+
+        # Create a selectbox to choose a protected characteristic to explore
+        selectbox = st.selectbox('Test characteristic', characteristic_dict.keys())
+
+        # Use function plot_data to plot selected data
+        plot_data(test, selectbox, characteristic_dict[selectbox])
+
+def model_out(key1):
+  add_radio = st.radio ("Choose what to explore", ("Demographics", "See the output data", "Venn Diagram"), horizontal=True)
+  if key1 not in st.session_state:
+    pass
+  else:
+    full_df = st.session_state[key1]
+
+    if add_radio == "Demographics":
       # Create a selectbox to choose a protected characteristic to explore
-      selectbox = create_selectbox('Train characteristic', characteristic_dict.keys())
+      selectbox = st.selectbox('Characteristic to explore', characteristic_dict.keys())
+      row1_space1, row1_1, row1_space2, row1_2, row1_space3 = st.columns((0.1, 3, 0.1, 3, 0.1))
+      with row1_1:
+        st.subheader("Model A")
 
-      # Use function plot_data to plot selected data
-      plot_data(train, selectbox, characteristic_dict[selectbox])
+        # Select test data
+        data = full_df.loc[full_df['Predicted_A'] == 1]
 
-    # Plot test data
+        # Use function plot_data to plot selected data
+        plot_data(data, selectbox, characteristic_dict[selectbox])
 
-    with row1_2:
-      st.subheader("Test data")
+      with row1_2:
+        st.subheader("Model B")
 
-      # Select test data
-      test = df.loc[df["Predicted_A"] != "train"]
+        # Select test data
+        data = full_df.loc[full_df['Predicted_B'] == 1]
 
-      # Create a selectbox to choose a protected characteristic to explore
-      selectbox = create_selectbox('Test characteristic', characteristic_dict.keys())
+        # Use function plot_data to plot selected data
+        plot_data(data, selectbox, characteristic_dict[selectbox])
 
-      # Use function plot_data to plot selected data
-      plot_data(test, selectbox, characteristic_dict[selectbox])
+    if add_radio == "See the output data":
+      selectbox_M = st.selectbox('Choose a model', pred_dict.keys())
 
+      # Select data
+      data = full_df.loc[full_df[pred_dict[selectbox_M]] == 1]
+      data = data.sort_values(by = prob_dict[selectbox_M], ascending = False)
+      data = data[['Candidate ID','Prob_1_A', 'Prob_1_B', 'Predicted_A', 'Predicted_B']]
+      data.index = np.arange(1, len(data) + 1)
 
-### CREATE THE "MODEL DATA VISUALISATION" PAGE ###
-      
-def model_vis():
-  st.subheader('Visualising the demographics of each label')
+      # # CSS to inject contained in a string
+      # hide_table_row_index = """
+      #         <style>
+      #         thead tr th:first-child {display:none}
+      #         tbody th {display:none}
+      #         </style>
+      #         """
 
-  # Create a selectbox to choose a protected characteristic to explore
-  selectbox_Lab = create_selectbox('Label to explore', ('Positive labels', 'Negative labels'))
+      # # Inject CSS with Markdown
+      # st.markdown(hide_table_row_index, unsafe_allow_html=True)
 
-  # Create a selectbox to choose a protected characteristic to explore
-  selectbox_Char = create_selectbox('Characteristic to explore', characteristic_dict.keys())
+      st.table(data.style.background_gradient(subset = ['Prob_1_A', 'Prob_1_B'], axis=0, vmin=0.40).highlight_max(color = '#FFCD9B', subset = ['Predicted_A', 'Predicted_B'], axis=0))
+      #text_gradient(cmap = 'winter', axis=0, subset = ['Prob_1_A', 'Prob_1_B', 'Prob_1_C'], vmin=0.70))
+      #st.table(data.style.highlight_max(subset = ['Prob_1_A', 'Prob_1_B', 'Prob_1_C'], axis=0))
 
-  row2_space1, row2_1, row2_space2, row2_2, row2_space3, row2_3, row2_space4 = st.columns((0.1, 1, 0.1, 1, 0.1, 1, 0.1))
+    if add_radio == "Venn Diagram":
+      row2_space1, row2_1, row2_space2, row2_2, row2_space3 = st.columns((0.1, 1, 0.1, 1, 0.1))
+      with row2_1:
+        fig, ax = plt.subplots()
 
-  with row2_1:
-    st.subheader("Model A")
+        list_A = full_df.loc[full_df['Predicted_A'] == 1, 'Candidate ID'].astype(int)
+        list_B = full_df.loc[full_df['Predicted_B'] == 1, 'Candidate ID'].astype(int)
+        set1 = set(list_A)
+        set2 = set(list_B)
 
-    # Select test data
-    if selectbox_Lab == 'Positive labels':
-      data = df.loc[df['Model_A_label'] == 1]
-    else:
-      data = df.loc[df['Model_A_label'] == 0]
-    
-    # Use function plot_data to plot selected data
-    plot_data(data, selectbox_Char, characteristic_dict[selectbox_Char])
+        venn2([set1, set2], ('Model A', 'Model B'), ax=ax)
+        st.pyplot(fig)
 
+      with row2_2:
+        st.markdown('This Venn Diagram presents the number of candidates which were selected by both models.')
 
-  with row2_2:
-    st.subheader("Model B")
+def model_vis(key1):
+  if key1 not in st.session_state:
+    pass
+  else:
+    full_df = st.session_state[key1]
 
-    # Select test data
-    if selectbox_Lab == 'Positive labels':
-      data = df.loc[df['Model_B_label'] == 1]
-    else:
-      data = df.loc[df['Model_B_label'] == 0]
-
-    # Use function plot_data to plot selected data
-    plot_data(data, selectbox_Char, characteristic_dict[selectbox_Char])
-  
-  with row2_3:
-    st.subheader("Model C")
-
-    # Select test data
-    if selectbox_Lab == 'Positive labels':
-      data = df.loc[df['Model_B_label'] == 1]
-    else:
-      data = df.loc[df['Model_B_label'] == 0]
-
-    # Use function plot_data to plot selected data
-    plot_data(data, selectbox_Char, characteristic_dict[selectbox_Char])
-
-### CREATE THE "MODEL PROPERTIES" PAGE ###
-
-def mod_prop():
-  st.subheader('Confusion matrices for all 3 models')
-  tab1, tab2, tab3 = st.tabs(["Model A", "Model B", "Model C"])
-
-  with tab1:
-    st.header("Model A")
-    row2_space1, row2_1, row2_space2, row2_2, row2_space3 = st.columns((0.1, 1, 0.1, 1, 0.1))
-    with row2_1:
-      create_confusion_matrix_heatmap(cm_A)
-    with row2_2:
-      plot_conf_rates(cm_A)
-
-  with tab2:
-    st.header("Model B")
-    row2_space1, row2_1, row2_space2, row2_2, row2_space3 = st.columns((0.1, 1, 0.1, 1, 0.1))
-    with row2_1:
-      create_confusion_matrix_heatmap(cm_B)
-    with row2_2:
-      plot_conf_rates(cm_B)
-
-  with tab3:
-    st.header("Model C")
-    row2_space1, row2_1, row2_space2, row2_2, row2_space3 = st.columns((0.1, 1, 0.1, 1, 0.1))
-    with row2_1:
-      create_confusion_matrix_heatmap(cm_C)
-    with row2_2:
-      plot_conf_rates(cm_C)
-
-### CREATE THE "MODEL OUTCOMES" PAGE ###
-
-def model_out():
-  st.subheader('What do the different models select?')
-  tab1, tab2, tab3 = st.tabs(["Characteristics", "Data", "Venn Diagram"])
-
-      
-  with tab1:
     # Create a selectbox to choose a protected characteristic to explore
-    selectbox = create_selectbox('Characteristic to explore - model A', characteristic_dict.keys())
-    row1_space1, row1_1, row1_space2, row1_2, row1_space3, row1_3, row1_space4 = st.columns((0.1, 1, 0.1, 1, 0.1, 1, 0.1))
-    with row1_1:
+    selectbox_Lab = st.selectbox('Label to explore', ('Positive labels', 'Negative labels'))
+
+    # Create a selectbox to choose a protected characteristic to explore
+    selectbox_Char = st.selectbox('Characteristic to explore', characteristic_dict.keys())
+
+    row2_space1, row2_1, row2_space2, row2_2, row2_space3 = st.columns((0.1, 3, 0.1, 3, 0.1))
+
+    with row2_1:
       st.subheader("Model A")
 
       # Select test data
-      data = df.loc[df['Predicted_A'] == "1"]
-
+      if selectbox_Lab == 'Positive labels':
+        data = full_df.loc[full_df['Model_A_label'] == 1]
+      else:
+        data = full_df.loc[full_df['Model_A_label'] == 0]
+      
       # Use function plot_data to plot selected data
-      plot_data(data, selectbox, characteristic_dict[selectbox])
+      plot_data(data, selectbox_Char, characteristic_dict[selectbox_Char])
 
-    with row1_2:
+
+    with row2_2:
       st.subheader("Model B")
 
       # Select test data
-      data = df.loc[df['Predicted_B'] == "1"]
+      if selectbox_Lab == 'Positive labels':
+        data = full_df.loc[full_df['Model_B_label'] == 1]
+      else:
+        data = full_df.loc[full_df['Model_B_label'] == 0]
 
       # Use function plot_data to plot selected data
-      plot_data(data, selectbox, characteristic_dict[selectbox])
+      plot_data(data, selectbox_Char, characteristic_dict[selectbox_Char])
+
+def mod_prop(key3, key4):
+  if key3 not in st.session_state:
+    pass
+  else:
+    row1_space1, row1_1, row1_space2, row1_2, row1_space3 = st.columns((0.1, 3, 0.1, 3, 0.1))
+
+    with row1_1:
+      st.header("Model A confusion matrix")
+      create_confusion_matrix_heatmap(st.session_state[key3])
+      plot_conf_rates(st.session_state[key4])
+
+    with row1_2:
+      st.header("Model B confusion matrix")
+      create_confusion_matrix_heatmap(st.session_state[key4])
+      plot_conf_rates(st.session_state[key3])
+        
+def data_plot(key1, key2, key3, key4):
+  st.title('''Compare the models you trained''')
+  page_radio = st.radio('What would you like to see?', ("Model outcomes", "Input scores", "Principal Component Analysis", "Label distribution", "Confusion matrices"), horizontal=True)
+
+  if page_radio == "Input scores":
+    model_scores(key1)
+  if page_radio == "Principal Component Analysis":
+    data_vis(key1, key2)
+  if page_radio == "Model outcomes":
+    model_out(key1)
+  if page_radio == "Label distribution":
+    model_vis(key1)
+  if page_radio == "Confusion matrices":
+    mod_prop(key3, key4)
+
+### CREATE THE "TARGET VARIABLE DEFINITION" PAGE ###
+def define_target_variable():
+
+  st.title('Selection of target variable')
+  expander = st.expander("See explanation")
   
-    with row1_3:
-      st.subheader("Model C")
+  expander.write('''On this page, you can participate in the process of defining the target variable for a hiring model. The target variable is 
+  the variable, or a changeable quality, whose value is defined and predicted by other variables. In the case of a hiring model, the target variable
+  usually is: who should be hired? Or: who should be interviewed? Therefore, the target variable will be a group of people. Once this group is defined 
+  in some way, we can show the model some examples of "features" of these people. In the case of the gamified hiring assessments, the group is defined
+  by someone in a company, possibly a hiring manager, who will select a group of "top performers". Then, these employees will play the cognitive games,
+  thus generating the features. The features will be their performance in those games. Finally, when new applicants apply for jobs, they will be asked
+  to play the same games. If the applicants' results are similar to those achieved by the top employees, the model might select them for interview/hiring.
+  If not, the model will not select them.
+  
+  Therefore, it is easy to imagine and understand that the way in which the hypothetical hiring manager selects the group of top employees will have a 
+  large effect on who the model learns to select. One manager might favour attentiveness and numerical skills more, while another might be more focused
+  on interpersonal skills and having good memory. When these two groups of people play the games, their results, and what the model learns to detect, 
+  will differ. Not only that; the demographics selected by these models will most likely be very different too.
+  
+  Here, you can define the target variable for two hiring models yourself, and see the effect that these varying definitions have on the target demographics 
+  of your models. Once you are finished setting the slider values, press "Assign values and train your models" button, and head to "Visualise your models".''')
 
-      # Select test data
-      data = df.loc[df['Predicted_C'] == "1"]
+  col1, col2 = st.columns(2)
 
-      # Use function plot_data to plot selected data
-      plot_data(data, selectbox, characteristic_dict[selectbox])
+  selectionsA = {}
+  selectionsB = {}
 
-  with tab2:
-    selectbox_M = create_selectbox('Choose a model', pred_dict.keys())
+  groups = ["attention", "reasoning", "memory", "behavioural restraint", "information processing speed"]
+  results_dict_A = groups_dict
+  results_dict_B = groups_dict
 
-    # Select data
-    data = df.loc[df[pred_dict[selectbox_M]] == "1"]
-    data = data.sort_values(by = prob_dict[selectbox_M], ascending = False)
-    data = data[['Candidate ID','Prob_1_A', 'Prob_1_B', 'Prob_1_C', 'Predicted_A', 'Predicted_B', 'Predicted_C']]
+  with col1:
+    st.write("Define target variable for model A ")
+    for i in groups:
+      name = f"{i} importance, model A"
+      slider = st.slider(name, min_value=0, max_value=10)
+      selectionsA[i] = slider
+  
+    results_dict_A = {k: selectionsA.get(v, v) for k, v in results_dict_A.items()}
+    total = sum(results_dict_A.values())
+    for (key, u) in results_dict_A.items():
+      if total != 0:
+        w = (u/total)
+        results_dict_A[key] = w
 
-    # CSS to inject contained in a string
-    hide_table_row_index = """
-            <style>
-            thead tr th:first-child {display:none}
-            tbody th {display:none}
-            </style>
-            """
+    if st.checkbox("Show target variable A weights per subtest", key="A"):
+      for (key, u) in results_dict_A.items():
+        txt = key.replace("_", " ")
+        st.markdown("- " + txt + " : " + f":green[{str(round((u*100), 2))}]")
 
-    # Inject CSS with Markdown
-    st.markdown(hide_table_row_index, unsafe_allow_html=True)
+  with col2:
+    st.write("Define target variable for model B ")
+    for i in groups:
+      name = f"{i} importance, model B"
+      slider = st.slider(name, min_value=0, max_value=10)
+      selectionsB[i] = slider
 
-    st.table(data.style.background_gradient(subset = ['Prob_1_A', 'Prob_1_B', 'Prob_1_C'], axis=0, vmin=0.80).highlight_max(color = '#FFCD9B', subset = ['Predicted_A', 'Predicted_B', 'Predicted_C'], axis=0))
-    #text_gradient(cmap = 'winter', axis=0, subset = ['Prob_1_A', 'Prob_1_B', 'Prob_1_C'], vmin=0.70))
-    #st.table(data.style.highlight_max(subset = ['Prob_1_A', 'Prob_1_B', 'Prob_1_C'], axis=0))
+    results_dict_B = {k: selectionsB.get(v, v) for k, v in results_dict_B.items()}
+    total = sum(results_dict_B.values())
+    for (key, u) in results_dict_B.items():
+      if total != 0:
+        w = ((u/total))
+        results_dict_B[key] = w
 
-  with tab3:
-    row2_space1, row2_1, row2_space2, row2_2, row2_space3 = st.columns((0.1, 1, 0.1, 1, 0.1))
-    with row2_1:
-      fig, ax = plt.subplots()
+    if st.checkbox("Show target variable B weights per subtest", key = "B"):
+      for (key, u) in results_dict_B.items():
+        txt = key.replace("_", " ")
+        st.markdown("- " + txt + " : " + f":green[{str(round((u*100), 2))}]")
+            
+  if st.button("Assign labels and train your models"):
+    scoreA = pd.DataFrame()
+    scoreB = pd.DataFrame()
+    test = all(value == 0 for value in results_dict_A.values()) and all(value == 0 for value in results_dict_B.values())
+    if test == True:
+      st.error('Cannot train the model if you do not define the target variable. Make your selections first!', icon="🚨")
+    else:
+      for (key, u) in results_dict_A.items():
+        scoreA[key] = u * dataframe[key]
+        scoresA = scoreA.sum(axis=1)
+        dataframe['model_A_scores'] = scoresA
+      for (key, u) in results_dict_B.items():
+        scoreB[key] = u * dataframe[key]
+        scoresB = scoreB.sum(axis=1)
+        dataframe['model_B_scores'] = scoresB
+      
+      new_annotated = assign_labels_by_probabilities(dataframe, "model_A_scores", "Model_A_label", "Model_A_probabilities", quantile=0.85, num_samples=100)
+      new_annotated = assign_labels_by_probabilities(new_annotated, "model_B_scores", "Model_B_label", "Model_B_probabilities", quantile=0.85, num_samples=100)
+      new_annotated = new_annotated.reset_index()
 
-      list_A = df.loc[df['Predicted_A'] == "1", 'Candidate ID'].astype(int)
-      list_B = df.loc[df['Predicted_B'] == "1", 'Candidate ID'].astype(int)
-      list_C = df.loc[df['Predicted_C'] == "1", 'Candidate ID'].astype(int)
-      set1 = set(list_A)
-      set2 = set(list_B)
-      set3 = set(list_C)
 
-      venn3([set1, set2, set3], ('Model A', 'Model B', 'Model C'), ax=ax)
-      st.pyplot(fig)
+      clean_data = drop_data_exp_2(new_annotated)
+      # specify the columns of interest
+      selected_cols = ['Model_A_label', 'Model_B_label']
+      
+      # count the number of rows where all three selected columns have a value of 1
+      num_rows_with_all_flags_1 = len(new_annotated[new_annotated[selected_cols].sum(axis=1) == len(selected_cols)])
+      
+      # print the result
+      st.write("Shared candidates between your target variables:", num_rows_with_all_flags_1)
+      X_data, Y_data_A, Y_data_B = clean_data.iloc[:, :-2], clean_data.iloc[:, [-2]], clean_data.iloc[:, [-1]]
+      X_data = X_data.drop(["index"], axis = 1)
+      Y_data_B = Y_data_B.reset_index()
+      X_train, X_test, y_train_A, y_test_A = train_test_split(X_data, Y_data_A, test_size=0.2)
+      y_train_A = y_train_A.reset_index()
+      y_test_A = y_test_A.reset_index()
+      y_train_B = pd.merge(y_train_A,Y_data_B[['index', 'Model_B_label']],on='index', how='left')
+      y_test_B = pd.merge(y_test_A,Y_data_B[['index', 'Model_B_label']],on='index', how='left')
+      y_train_B = y_train_B.drop(labels='Model_A_label', axis = 1)
+      y_test_B = y_test_B.drop(labels='Model_A_label', axis = 1)
+      y_train_A = y_train_A.set_index("index")
+      y_train_B = y_train_B.set_index("index")
+      y_test_A = y_test_A.set_index("index")
+      y_test_B = y_test_B.set_index("index")
 
-    with row2_2:
-      st.markdown('comment on venn')
+      accuracy_A, precision_A, recall_A, X_full_A, cm_A = train_and_predict("A", X_train, X_test, y_train_A, y_test_A)
+      accuracy_B, precision_B, recall_B, X_full_B, cm_B = train_and_predict("B", X_train, X_test, y_train_B, y_test_B)
+      full = pd.merge(X_full_A,X_full_B[['index','Predicted_B', 'Prob_0_B', "Prob_1_B"]],on='index', how='left')
+      complete = pd.merge(full,new_annotated[['index', 'age', 'gender', 'education_level', 'country', 'Model_A_label', 'Model_B_label', 'model_A_scores', 'model_B_scores']],on='index', how='left')
+      complete=complete.replace({"education_level": education_dict})
+      complete = complete.rename(columns={"index": "Candidate ID"})
+      
+      if 'complete_df' not in st.session_state:
+        st.session_state['complete_df'] = complete
+      if 'clean_df' not in st.session_state:
+        st.session_state['clean_df'] = clean_data
+      if 'cm_A' not in st.session_state:
+        st.session_state['cm_A'] = cm_A
+      if 'cm_B' not in st.session_state:
+        st.session_state['cm_B'] = cm_B
+
+      st.markdown('''You are done defining the target variable. Click "Visualise your models" in the sidebar to see the results!''')
 
 
 ### ASSIGN WHAT TO DISPLAY ACCORDING TO THE SIDEBAR SELECTION ###
   
 if add_radio == 'About':
   about()
-if add_radio == "Data exploration":
-  data_vis()
-if add_radio == "Model confusion matrices":
-  mod_prop()
-if add_radio == "Model labels distribution":
-  model_vis()
-if add_radio == "Model outcomes":
-  model_out()
-if add_radio == "Input data":
-  data_plot()
+if add_radio == "Define target variable":
+  define_target_variable()
+if add_radio == "Visualise your models":
+  data_plot('complete_df', 'clean_df', 'cm_A', 'cm_B')
