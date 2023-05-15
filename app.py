@@ -291,7 +291,7 @@ def data_vis(key1, key2):
     (0.1, 1, 0.1, 1, 0.1)
     )
     if key2 not in st.session_state:
-      pass
+      st.error('Cannot train the model if you do not define the target variable. Make your selections first!', icon="🚨")
     else:
       dataframe_PCA = st.session_state[key2]
       full_df = st.session_state[key1]
@@ -326,7 +326,7 @@ def data_vis(key1, key2):
 def model_out(key1):
   add_radio = st.radio ("Choose what to explore", ("Demographics", "See the output data", "Venn Diagram"), horizontal=True)
   if key1 not in st.session_state:
-    pass
+    st.error('Cannot train the model if you do not define the target variable. Make your selections first!', icon="🚨")
   else:
     full_df = st.session_state[key1]
 
@@ -394,7 +394,7 @@ def model_out(key1):
 
 def model_vis(key1):
   if key1 not in st.session_state:
-    pass
+    st.error('Cannot train the model if you do not define the target variable. Make your selections first!', icon="🚨")
   else:
     full_df = st.session_state[key1]
 
@@ -433,7 +433,7 @@ def model_vis(key1):
 
 def mod_prop(key3, key4):
   if key3 not in st.session_state:
-    pass
+    st.error('Cannot train the model if you do not define the target variable. Make your selections first!', icon="🚨")
   else:
     row1_space1, row1_1, row1_space2, row1_2, row1_space3 = st.columns((0.1, 3, 0.1, 3, 0.1))
 
