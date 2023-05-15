@@ -115,7 +115,7 @@ st.set_page_config(page_title='EquiVar', page_icon=':robot_face:', layout='wide'
 
 ### CREATE THE "ABOUT" PAGE ###
 def about():
-  St.dataframe(data = dataframe)
+  st.dataframe(data = dataframe)
   #Set title
   st.title('EquiVar - a new paradigm in hiring by machine')
   # Set columns
