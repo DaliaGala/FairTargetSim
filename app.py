@@ -109,13 +109,13 @@ education_dict = {
 ### IMPORT DATA FILES ###
 dataframe = pd.read_csv('data/dataframe.csv')
 dataframe = dataframe.drop(["Unnamed: 0"], axis = 1)
-dataframe = dataframe.drop(["Unnamed: 0.1"], axis = 1)
 
 ### PAGE CONFIG ###
 st.set_page_config(page_title='EquiVar', page_icon=':robot_face:', layout='wide')
 
 ### CREATE THE "ABOUT" PAGE ###
 def about():
+  St.dataframe(data = dataframe)
   #Set title
   st.title('EquiVar - a new paradigm in hiring by machine')
   # Set columns
