@@ -8,13 +8,18 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 import seaborn as sns
 import math
-from matplotlib_venn import venn3
 from adjustText import adjust_text
 from sklearn.decomposition import PCA
 import plotly.graph_objects as go
 import plotly.express as px
-import statsmodels.api as sm
 from sklearn.preprocessing import StandardScaler
+from numpy import random
+from matplotlib_venn import venn2
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
+from sklearn import svm
+from sklearn import metrics
+import statsmodels.api as sm
 from utils import create_confusion_matrix_heatmap, plot_conf_rates, assign_labels_by_probabilities, drop_data_exp_2, train_and_predict, plot_data, run_PCA
 
 ### DICTIONARIES AND CONSTANTS ###
