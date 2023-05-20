@@ -18,3 +18,4 @@ shap
 matplotlib-inline
 pytest
 Jinja2
+statkit

@@ -1,6 +1,4 @@
-
 ### IMPORT LIBRARIES ###
-
 import streamlit as st
 import numpy as np
 import pandas as pd 
@@ -20,10 +18,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
 from sklearn import svm
 from sklearn import metrics
-import statsmodels.api as sm
+from sklearn.metrics import accuracy_score
+from statkit.non_parametric import bootstrap_score
 
 ### FUNCTIONS ###
-
 ### FUNCTIONS ###
 # Function: add labels by probabilities
 def assign_labels_by_probabilities(df, scores_col, label_col, probs_col, quantile=0.85, num_samples=100):
@@ -55,7 +53,7 @@ def assign_labels_by_probabilities(df, scores_col, label_col, probs_col, quantil
 
 # A function to remove protected characteristics and useless data
 def drop_data_exp_2(df):
-  labels_to_drop = ["user_id", "age", "gender", "education_level", "country", "test_run_id", "battery_id", "time_of_day", 
+  labels_to_drop = ["user_id", "age", "gender", "education level", "country", "test_run_id", "battery_id", "time_of_day", 
                     "model_A_scores", "model_B_scores", "Model_A_probabilities", "Model_B_probabilities"]
   clean = df.drop(labels_to_drop, axis = 1)
   return clean
@@ -109,34 +107,76 @@ def train_and_predict(name, X_train, X_test, y_train, y_test, kernel='poly'):
     # Calculate recall
     recall = metrics.recall_score(y_test, y_pred)
 
-    return accuracy, precision, recall, X_full, cm
+    baseline_accuracy = bootstrap_score(y_test, y_pred, metric=accuracy_score, random_state=5)
+
+    return accuracy, precision, recall, X_full, cm, baseline_accuracy
+
+def display_proportional(data, protected_characteristic, which_model):
+  if protected_characteristic == 'age':
+    bins= [18,20,30,40,50,60,70,80,90]
+    labels = ['18-20','21-30','31-40','41-50','51-60','61-70','71-80','81-90']
+    data['age_bins'] = pd.cut(data['age'], bins=bins, labels=labels, right=False)
+    data_all = data.loc[data[which_model] != "train"]
+    info_all = data_all["age_bins"].value_counts()
+    data_sel = data.loc[data[which_model] == 1]
+    info_sel = data_sel["age_bins"].value_counts()
+    dict_all = dict(info_all)
+    dict_sel = dict(info_sel)
+    for key in dict_all.keys():
+      if key not in dict_sel.keys():
+        dict_sel[key] = 0
+    dict_percentage = {k: round(((dict_sel[k] / dict_all[k])*100), 2) for k in dict_all if k in dict_sel}
+    values = []
+    for label in labels:
+      values.append(dict_percentage[label])
+    fig = px.bar(x = labels, y = values, text_auto='.2s')
+    fig.update_layout(yaxis_title="percentage value", xaxis_title="category")
+    st.plotly_chart(fig, use_container_width=True)
+  else:
+    data_all = data.loc[data[which_model] != "train"]
+    info_all = data_all[protected_characteristic].value_counts()
+    data_sel = data.loc[data[which_model] == 1]
+    info_sel = data_sel[protected_characteristic].value_counts()
+    dict_all = dict(info_all)
+    dict_sel = dict(info_sel)
+    for key in dict_all.keys():
+      if key not in dict_sel.keys():
+        dict_sel[key] = 0
+    dict_percentage = {k: round(((dict_sel[k] / dict_all[k])*100), 2) for k in dict_all if k in dict_sel}
+    names = list(dict_percentage.keys())
+    values = list(dict_percentage.values())
+    fig = px.bar(x = names, y = values, text_auto='.2s')
+    fig.update_layout(yaxis_title="percentage value", xaxis_title="category")
+    st.plotly_chart(fig, use_container_width=True)
+    # for key in dict_all.keys():
+    #   st.write(f"{key} : {dict_all[key]} assessed, {dict_sel[key]} selected. Proportional percentage selected: {dict_percentage[key]} %.")
 
 def plot_data(data, protected_characteristic, colour_code):
 
   if protected_characteristic == 'age':
-      bin_width= 1
-      nbins = math.ceil((data["age"].max() - data["age"].min()) / bin_width)
-      fig = px.histogram(data, x='age', nbins=nbins)
-      fig.update_layout(margin=dict(l=20, r=20, t=30, b=0))
-      st.plotly_chart(fig, use_container_width=True)
-      mean = data.loc[:, 'age'].mean().round(2)
-      st.markdown(f'The mean age for this group is %s years.' % mean)
+    mean = data.loc[:, 'age'].mean().round(2)
+    st.markdown(f':green[The mean age for this group is %s years.]' % mean)
+    bin_width= 1
+    nbins = math.ceil((data["age"].max() - data["age"].min()) / bin_width)
+    fig = px.histogram(data, x='age', nbins=nbins)
+    fig.update_layout(margin=dict(l=20, r=20, t=30, b=0))
+    st.plotly_chart(fig, use_container_width=True)
 
-  elif protected_characteristic == 'education_level':
-      data = data[protected_characteristic].value_counts().to_frame().reset_index()
-      fig = px.bar(data, x=data.iloc[:,1], y=data.iloc[:,0], orientation='h',color=data.iloc[:,1])
-      fig.update_layout(margin=dict(l=20, r=20, t=30, b=0))
-      fig.update_coloraxes(showscale=False)
-      fig.update_layout(yaxis_title=None)
-      fig.update_layout(xaxis_title=None)
-      st.plotly_chart(fig, use_container_width=True)
+  elif protected_characteristic == 'education level':
+    data = data[protected_characteristic].value_counts().to_frame().reset_index()
+    fig = px.bar(data, x=data.iloc[:,1], y=data.iloc[:,0], orientation='h',color=data.iloc[:,1])
+    fig.update_layout(margin=dict(l=20, r=20, t=30, b=0))
+    fig.update_coloraxes(showscale=False)
+    fig.update_layout(yaxis_title=None)
+    fig.update_layout(xaxis_title=None)
+    st.plotly_chart(fig, use_container_width=True)
 
   else:
-      data = data[protected_characteristic].value_counts().to_frame().reset_index()
-      fig = px.pie(data, values=data.iloc[:,1], names=data.iloc[:,0], color = data.iloc[:,0],
-                    height=300, width=200, color_discrete_map=colour_code)
-      fig.update_layout(margin=dict(l=20, r=20, t=30, b=0))
-      st.plotly_chart(fig, use_container_width=True)
+    data = data[protected_characteristic].value_counts().to_frame().reset_index()
+    fig = px.pie(data, values=data.iloc[:,1], names=data.iloc[:,0], color = data.iloc[:,0],
+                  height=300, width=200, color_discrete_map=colour_code)
+    fig.update_layout(margin=dict(l=20, r=20, t=30, b=0))
+    st.plotly_chart(fig, use_container_width=True)
 
 def run_PCA(df, drop_1, retain_this, n):
   df_clean = df.drop(columns = [drop_1, retain_this, "index"])
@@ -172,7 +212,7 @@ def plot_conf_rates(confusion_matrix):
   FN = confusion_matrix[1,0]
 
 
-    # Sensitivity, hit rate, recall, or true positive rate
+  # Sensitivity, hit rate, recall, or true positive rate
   TPR = TP/(TP+FN)
   # Specificity or true negative rate
   TNR = TN/(TN+FP) 
@@ -192,4 +232,28 @@ def plot_conf_rates(confusion_matrix):
   d = {'Measure': ['True Positive Rate', 'True Negative Rate', 'Positive Predictive Value', 'Negative Predictive Value', 'False Positive Rate', 'False Negative Rate', 'False Discovery Rate'], 
   'Equation' : ['TPR = TP/(TP+FN)', 'TNR = TN/(TN+FP)', 'PPV = TP/(TP+FP)', 'NPV = TN/(TN+FN)', 'FPR = FP/(FP+TN)', 'FNR = FN/(TP+FN)', 'FDR = FP/(TP+FP'], 
   'Score': [TPR, TNR, PPV, NPV, FPR, FNR, FDR]}
+  # CSS to inject contained in a string
+  hide_table_row_index = """
+            <style>
+            thead tr th:first-child {display:none}
+            tbody th {display:none}
+            </style>
+            """
+
+  # Inject CSS with Markdown
+  st.markdown(hide_table_row_index, unsafe_allow_html=True)
+
   st.table(d)
+
+def mod_prop(cmA, cmB):
+  row1_space1, row1_1, row1_space2, row1_2, row1_space3 = st.columns((0.1, 3, 0.1, 3, 0.1))
+
+  with row1_1:
+    st.subheader("Model A confusion matrix")
+    create_confusion_matrix_heatmap(cmA)
+    plot_conf_rates(cmA)
+
+  with row1_2:
+    st.subheader("Model B confusion matrix")
+    create_confusion_matrix_heatmap(cmB)
+    plot_conf_rates(cmB)
