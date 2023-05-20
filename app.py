@@ -115,7 +115,6 @@ education_dict = {
 ### IMPORT DATA FILES ###
 dataframe = pd.read_csv('data/dataframe.csv')
 dataframe = dataframe.drop(["Unnamed: 0"], axis = 1)
-dataframe = dataframe.drop(["Unnamed: 0.1"], axis = 1)
 dataframe = dataframe.rename(columns={"education_level": "education level"})
 
 ### PAGE CONFIG ###
