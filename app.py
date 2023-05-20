@@ -113,7 +113,7 @@ education_dict = {
   }
 
 ### IMPORT DATA FILES ###
-dataframe = pd.read_csv('./dataframe.csv')
+dataframe = pd.read_csv('data/dataframe.csv')
 dataframe = dataframe.drop(["Unnamed: 0"], axis = 1)
 dataframe = dataframe.drop(["Unnamed: 0.1"], axis = 1)
 dataframe = dataframe.rename(columns={"education_level": "education level"})
@@ -737,7 +737,7 @@ def idea_practice():
   c1, c2 = st.columns((2, 2))
 
   with c1:
-    st.image('./img1.jpg')
+    st.image('images/img1.jpg')
 
   with c2:
     st.markdown('''The first one would be to indeed ask multiple hiring managers for their opinions on which employees to model the hiring algorithm after. It is more than likely that each of them will name some 
@@ -792,7 +792,7 @@ def idea_practice():
   st.markdown('''Our considerations, however, bring us to an important question. Is there truly a **numerically defineable difference** between the top employees in a given role, and the rest of the employees of that company in that role?
   Data of this sort was not available to us, but we propose the following experiment:''')
   
-  st.image('./img2.jpg')
+  st.image('images/img2.jpg')
 
   st.markdown('''Such considerations are probably taken into account by the companies who provide hiring models to clients, but, to our knowlegde, insights of this sort are not published. Yet, our considerations further beg the question
   of whether the majority of employees in the role for which a hiring model is being designed with the use of "top employees only" would be selected by such model. If our experiment showed that the model cannot distinguish between 
