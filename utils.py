@@ -1,20 +1,21 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu May 25 15:04:19 2023
+
+@author: daliagala
+"""
+
 ### IMPORT LIBRARIES ###
 import streamlit as st
 import numpy as np
 import pandas as pd 
-import matplotlib
 import matplotlib.pyplot as plt
 import plotly.express as px
 import seaborn as sns
 import math
-from adjustText import adjust_text
 from sklearn.decomposition import PCA
-import plotly.graph_objects as go
-import plotly.express as px
-from sklearn.preprocessing import StandardScaler
 from numpy import random
-from matplotlib_venn import venn2
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
 from sklearn import svm
 from sklearn import metrics
@@ -22,7 +23,7 @@ from sklearn.metrics import accuracy_score
 from statkit.non_parametric import bootstrap_score
 
 ### FUNCTIONS ###
-### FUNCTIONS ###
+
 # Function: add labels by probabilities
 def assign_labels_by_probabilities(df, scores_col, label_col, probs_col, quantile=0.85, num_samples=100):
     # Sort the dataframe by scores column in descending order
@@ -52,7 +53,7 @@ def assign_labels_by_probabilities(df, scores_col, label_col, probs_col, quantil
     return annotated
 
 # A function to remove protected characteristics and useless data
-def drop_data_exp_2(df):
+def drop_data(df):
   labels_to_drop = ["user_id", "age", "gender", "education level", "country", "test_run_id", "battery_id", "time_of_day", 
                     "model_A_scores", "model_B_scores", "Model_A_probabilities", "Model_B_probabilities"]
   clean = df.drop(labels_to_drop, axis = 1)
@@ -111,6 +112,8 @@ def train_and_predict(name, X_train, X_test, y_train, y_test, kernel='poly'):
 
     return accuracy, precision, recall, X_full, cm, baseline_accuracy
 
+# A function to display proportional representation of protected characteristics
+
 def display_proportional(data, protected_characteristic, which_model):
   if protected_characteristic == 'age':
     bins= [18,20,30,40,50,60,70,80,90]
@@ -148,9 +151,8 @@ def display_proportional(data, protected_characteristic, which_model):
     fig = px.bar(x = names, y = values, text_auto='.2s')
     fig.update_layout(yaxis_title="percentage value", xaxis_title="category")
     st.plotly_chart(fig, use_container_width=True)
-    # for key in dict_all.keys():
-    #   st.write(f"{key} : {dict_all[key]} assessed, {dict_sel[key]} selected. Proportional percentage selected: {dict_percentage[key]} %.")
-
+    
+# A function to plot data depending on data type
 def plot_data(data, protected_characteristic, colour_code):
 
   if protected_characteristic == 'age':
@@ -178,6 +180,7 @@ def plot_data(data, protected_characteristic, colour_code):
     fig.update_layout(margin=dict(l=20, r=20, t=30, b=0))
     st.plotly_chart(fig, use_container_width=True)
 
+# A function to run PCA with custom no of components using sklearn
 def run_PCA(df, drop_1, retain_this, n):
   df_clean = df.drop(columns = [drop_1, retain_this, "index"])
   labels = list(df_clean.columns)
@@ -192,6 +195,7 @@ def run_PCA(df, drop_1, retain_this, n):
   coeff = np.transpose(pca.components_[0:2, :])
   return pca, finalDf2, labels, coeff, principalComponents
 
+# Plot confusion matrices as heatmaps
 def create_confusion_matrix_heatmap(confusion_matrix):
   sns.set(font_scale=1.4)
   group_names = ['True Neg (TN)','False Pos (FP)','False Neg (FN)','True Pos (TP)']
@@ -205,6 +209,7 @@ def create_confusion_matrix_heatmap(confusion_matrix):
   plt.ylabel('Actual')
   st.write(fig)
 
+# Display model metrics as tables
 def plot_conf_rates(confusion_matrix):
   TN = confusion_matrix[0,0]
   TP = confusion_matrix[1,1]
@@ -244,16 +249,4 @@ def plot_conf_rates(confusion_matrix):
   st.markdown(hide_table_row_index, unsafe_allow_html=True)
 
   st.table(d)
-
-def mod_prop(cmA, cmB):
-  row1_space1, row1_1, row1_space2, row1_2, row1_space3 = st.columns((0.1, 3, 0.1, 3, 0.1))
-
-  with row1_1:
-    st.subheader("Model A confusion matrix")
-    create_confusion_matrix_heatmap(cmA)
-    plot_conf_rates(cmA)
-
-  with row1_2:
-    st.subheader("Model B confusion matrix")
-    create_confusion_matrix_heatmap(cmB)
-    plot_conf_rates(cmB)
+  
