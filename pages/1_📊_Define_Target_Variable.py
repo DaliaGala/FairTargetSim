@@ -106,6 +106,10 @@ with st.expander("See explanation"):
 
 col1, col2 = st.columns(2)
 
+#Initialise slider values
+list_values_A = (9, 10, 2, 1, 5)
+list_values_B = (1, 2, 10, 9, 3)
+
 selectionsA = {}
 selectionsB = {}
 results_dict_A = groups_dict
@@ -114,7 +118,7 @@ results_dict_B = groups_dict
 with col1:
     st.subheader("Define target variable for model A ")
     for i in groups:
-        selectionsA[i] = 0
+        selectionsA[i] = list_values_A(enumerate(i))
         
     if "slider_values_A" not in st.session_state:
         st.session_state["slider_values_A"] = selectionsA
@@ -145,7 +149,7 @@ with col1:
 with col2:
     st.subheader("Define target variable for model B ")
     for i in groups:
-        selectionsB[i] = 0
+        selectionsB[i] = list_values_B(enumerate(i))
         
     if "slider_values_B" not in st.session_state:
         st.session_state["slider_values_B"] = selectionsB
