@@ -60,8 +60,8 @@ st.markdown('''Imagine you are hiring for a position of your choice. Your task b
              two different models, one for each of your target variable definitions. In the “See visualizations” page, you can see how your two 
              models differ in matters of bias and overall performance.''')
 
-st.markdown('''To see more about the nature of target variable definition and how hiring models of the type we demonstrate in this 
-            dashboard work, click :green["See explanation] below.''')
+st.markdown('''To see more about the nature of the target variable definition and how hiring models of the type we demonstrate in this 
+            dashboard work, click :green["See explanation"] below.''')
 
 
 with st.expander("See explanation"):
@@ -87,11 +87,7 @@ with st.expander("See explanation"):
           - **Behavioral Restraint**: Go/No go
           """)
     
-    st.markdown('''You can assign weights to these features using sliders. The weights will represent the importance of these features in defining a “successful employee.”''')
-    
-    st.markdown('''You can check the assigned percentages for each subtest by ticking the checkbox beneath the sliders. Once you're done, press "Assign values and train your models". Different scores will be assigned to each individual in the dataset based on your input, and these scores will differ between models if you've selected different slider values.''')
-    
-    st.markdown('''After this, the models will be trained, and you'll see output metrics for each model, including shared candidates between datasets, model accuracy and its confidence interval, confusion matrices, and other model metrics. Finally, you can explore demographic differences between your models under "Visualize your models" in the sidebar.''')
+    st.markdown('''You can assign weights to these features using sliders. The weights will represent the importance of these features in defining a “successful employee.” You can check the assigned percentages for each subtest by ticking the checkbox beneath the sliders.''')
 
 col1, col2 = st.columns(2)
 
