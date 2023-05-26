@@ -85,10 +85,8 @@ def mod_prop(cmA, cmB):
     plot_conf_rates(cmB)
 
 def model_scores(dataframe):
-  st.markdown('''This section visualises the score distribution assigned to each hypothetical employee based on the values you selected for each slider versus the protected characteristic distribution. These scores are then used to 
-  assign labels to the hypothetical employees. Therefore, two different datasets are created based on which we can train models. These scores emulate, in an **explicit and numerical** manner,
-  the opinions of the hypothetical hiring managers A and B when they try to decide who to select as "top employees". Much like in the case of the original [**NCPT dataset**](https://www.nature.com/articles/s41597-022-01872-8) analysis,
-  the scores obtained by the players of the cognitive games decline with age. This presents an insight about the usage of gamified hiring where its very nature could be considered ageist.''')
+  st.markdown('''This section displays the distribution of scores assigned to each hypothetical employee, according to the values you set on the sliders, compared with the distribution of protected characteristics. These scores are then used to assign labels to the hypothetical employees, creating two distinct datasets to train the models. In essence, these scores explicitly and numerically mimic the viewpoints of hypothetical hiring managers A and B when deciding who to label as "top employees."''')
+  st.markdown('''Just as in the original NCPT dataset analysis, the scores obtained by participants in the cognitive games decline with age. This observation provides insight into the potential issue of ageism inherent in the use of gamified hiring processes.''')
   # Create a selectbox to choose a protected characteristic to explore
   plot_radio = st.radio('Characteristic to explore', characteristic_dict.keys(), horizontal=True)
   row2_space1, row2_1, row2_space2 = st.columns((0.1, 5, 0.1))
@@ -132,6 +130,7 @@ def model_scores(dataframe):
 
 def PCA_general(full_df, dataframe_PCA):
   st.subheader("Principal components analysis")
+  st.markdown('''On this page, you can see the distribution of the dataset labels which were assigned based on the scores calculated from the slider values you selected previously. Principal Components Analysis, or PCA, is a technique often used to analyse and subsequently visualise datasets where there are many features per single example. This is the case with the NCPT dataset used in our simulator. Specifically, the battery which we used has 11 features per single example, the example being the player of cognitive games, and, in our metaphor, a hypothetical employee or job candidate. It is impossible to plot 11 dimensions, and PCA allows for the visualisation of multidimensional data, while also preserving as much information as possible.''')
   choice = st.radio("What would you like to explore?", ("PCAs", "Components loading"))
   pcaA, dfA, labelsA, coeffA, componentsA = run_PCA(dataframe_PCA, 'Model_B_label', 'Model_A_label', 2)
   pcaB, dfB, labelsB, coeffB, componentsB = run_PCA(dataframe_PCA, 'Model_A_label', 'Model_B_label', 2)
@@ -185,13 +184,7 @@ def PCA_general(full_df, dataframe_PCA):
       fig.update_traces(marker_size = 8)
       st.plotly_chart(fig, use_container_width=True)
       
-    st.markdown('''Now you can see the distribution of the dataset labels which were assigned based on the scores calculated from the slider values above. 
-      [Principal Components Analysis](https://en.wikipedia.org/wiki/Principal_component_analysis), or PCA, is a technique often used to analyse and subsequently visualise datasets 
-      where there are many features per single example. This is the case with the NCPT dataset used in our simulator. Specifically, the battery which we used has 11 features per single 
-      example, the example being the player of cognitive games, and, in our metaphor, a hypothetical employee or job candidate. It is impossible to plot 11 dimensions, and PCA allows 
-      for the visualisation of multidimensional data, while also preserving as much information as possible. The plots below shows the reduction of 11 dimensions (11 subtest results) to 
-      3 dimensions. At the top, you can see how much information, or "Total Variance", has been preserved. Note that for both datasets, A and B, different points are labelled "1" or "0". 
-      This shows that the two datasets represent the two different target variable definitions which were created by you above. The plots are interactive - zoom in to explore in detail.''')
+    st.markdown('''These plots show the reduction of 11 dimensions (11 subtest results) to 3 dimensions. At the top, you can see how much information, or "Total Variance", has been preserved. Note that for both datasets, A and B, different points are labelled "1" or "0". This shows that the two datasets represent the two different target variable definitions which were created by you previously. The plots are interactive - zoom in to explore in detail.''')
 
     pcaA, dfA, labelsA, coeffA, componentsA = run_PCA(dataframe_PCA, 'Model_B_label', 'Model_A_label', 2)
     pcaB, dfB, labelsB, coeffB, componentsB = run_PCA(dataframe_PCA, 'Model_A_label', 'Model_B_label', 2)
@@ -275,11 +268,11 @@ def PCA_general(full_df, dataframe_PCA):
       )
     fig.update_traces(marker_size = 10)
     st.plotly_chart(fig, use_container_width = True)
+    st.markdown('''On this plot, PCA component loadings can be explored. These facilitate the understanding of how much each variable (which there are 11 of) contributes to a particular principal component. Here, the 11 variables were reduced to 2 components, which are labelled PC1 and PC2 on the x and y axes. The magnitude of the loading (here displayed as an arrow per each variable) indicates how strong the relationship between the variable and the component is. Therefore, the longer the arrow, the stronger the relationship between that component and that variable. The loading's sign can be positive or negative. This indicates whether the principal component and that variable are positively or negatively correlated. We can see that multiple variables are positively correlated with PC2. Two variables, episodic verbal learning and delayed recall are negatively correlated with both of the components, which means that the variance in them is not well represented by these two components.''')
 
 
 def model_out(full_df):
-  st.markdown('''This section shows you the differences between your two models when they are given the same set of previously unseen candidates to assign labels to. You are exploring those candidates who were given label "1" by the models,
-  therefore, they would be the ones offered the job interview or selected by the position based on your target variable definition.''')
+  st.markdown('''This section highlights the discrepancies between your two models when presented with the same pool of new, previously unseen candidates to label. Specifically, you'll be investigating the candidates assigned a "1" label by both models. These individuals would be those considered for a job interview or chosen for the role, according to your defined target variable.''')
   # Create a selectbox to choose a protected characteristic to explore
   selectbox = st.selectbox('Characteristic to explore', characteristic_dict.keys())
   representation = st.selectbox("Representation", ("absolute", "proportional"))
@@ -310,14 +303,9 @@ def model_out(full_df):
       display_proportional(full_df, selectbox,'Predicted_B')
       
   
-  st.markdown("""Here, you compare how the models choices vary with respect to representation of the four protected characteristics, 
-  which are: age, gender, education level and country. You can visualise the difference either as "Absolute" or "Proportional". "Absolute" 
-  shows the absolute numbers or percentage selected per each characteristic. Therefore, if the model assigned label "1" to 5 female 
-  candidates and 5 male candidates, you will see that the "Absolute" outcome is 50% and 50%. "Proportional" shows what percentage of this 
-  group was selected by the model as a proportion of the input proportion of this group. For example: if 100 male candidates were evaluated 
-  by the model and 5 were selected, you will see 5% representation, and if 200 female candidates were evaluated, and 5 were selected, you will 
-  see 2.5% representation. If you see empty categories in the "Proportional" view, this means that representatives of these categories were 
-  evaluated by the model, but none of them were labelled "1", therefore, their proportional representation is 0%.""")
+  st.markdown('''In this section, you're comparing the model's selections concerning four protected characteristics: age, gender, education level, and country. You can visualize these differences in two ways: "Absolute" or "Proportional".''')
+  st.markdown('''"Absolute" representation gives you the raw numbers or percentages of each characteristic chosen. For instance, if the model labeled 5 female candidates and 5 male candidates as "1", the "Absolute" outcome will display as 50% for both genders."Proportional" representation, on the other hand, shows the percentage of a group selected by the model relative to the total number of that group in the input data. For example, if the model evaluated 100 male candidates and selected 5, you will see a 5% representation. If it evaluated 200 female candidates and selected 5, it will show a 2.5% representation.''')
+  st.markdown('''If you encounter empty categories in the "Proportional" view, this indicates that while candidates from these categories were evaluated, none were labeled as "1". Hence, their proportional representation amounts to 0%.''')
 
 def dataframe_out(full_df):
   selectbox_M = st.selectbox('Choose which model output to rank by', pred_dict.keys())
@@ -331,13 +319,9 @@ def dataframe_out(full_df):
 
   st.table(data.style.background_gradient(subset = ["Ranking, model A", "Ranking, model B"], axis=0, vmin=0.40).highlight_max(color = '#FFCD9B', subset = ["Predicted label A", "Predicted label B"], axis=0))
   
-  st.markdown("""Here, you can see the data for all candidates labelled "1" by the model which you choose at the top. You will simultaneously 
-  see what the same candidates were labelled as by the other model. It is likely that you will see that some candidates chosen by one model were 
-  not chosen by the second model. Candidates labelled "1" are highlighted in orange in the columns "Predicted label A" and "Predicted label B". You will also see the probability 
-  with which the candidates were labelled "1". The darker the colour blue, the higher to the top of the ranking the given candidate was (the maximum being 1, and the minimum being 0).
-  You might see that some candidates ranked very highly for one of the models were ranked 
-  much lower for the other model.""")
-
+  st.markdown("""In this section, you can review the data for all candidates labeled "1" by the selected model, found at the top of the page. Simultaneously, you can observe the labels assigned to these same candidates by the other model. It's likely that there will be instances where candidates chosen by one model weren't selected by the other. Candidates labeled "1" are highlighted in orange in the "Predicted label A" and "Predicted label B" columns.""")
+  st.markdown('''In addition to this, you can see the probability with which each candidate was labeled "1". The intensity of the blue color indicates the candidate's ranking position - a darker blue represents a higher ranking (with 1 being the maximum and 0 the minimum). You may notice that some candidates highly ranked by one model may be ranked significantly lower by the other model.''')
+  
 def venn_diagram(full_df):
   row2_space1, row2_1, row2_space2, row2_2, row2_space3 = st.columns((0.1, 1, 0.1, 1, 0.1))
   with row2_1:
@@ -352,18 +336,13 @@ def venn_diagram(full_df):
     st.pyplot(fig)
 
   with row2_2:
-    st.markdown('''This Venn Diagram presents the number of candidates which were selected by both models. It is likely that some candidates were selected 
-    by both models, while others were selected specifically by only one model. If we imagine that model A represents the decision of one hiring manager, and model
-    B represents the decision of another one, it is easy to understand that, depending on the circumstances, some candidates have the chance to be hired, and
-    some don't. This exemplifies the arbitrary nature of target variable definition in the context of very subjective target variables. It is easy to 
-    define a target variable when the classification problem concerns distinguishing dragonflies from butterflies. One is a dragonfly, and another is a butterfly,
-    and there is not much space for uncertainty in this classification. It is much harder to define what a good employee is because this classification is subjective.''')
+    st.markdown('''This Venn Diagram visualizes the number of candidates chosen by both models. It's likely that some candidates will be selected by both models, while others may be chosen by only one model. If we consider Model A as the decision of one hiring manager and Model B as another's, it's easy to see how the selection outcome varies depending on the decision-maker. Some candidates may get the opportunity to be hired, while others might not. This serves as an illustration of the inherent arbitrariness in defining the target variable when dealing with highly subjective outcomes.''')
+    st.markdown('''For instance, it's straightforward to define a target variable in a classification problem like distinguishing dragonflies from butterflies, where there's little room for ambiguity. However, defining what makes a 'good' employee is far more challenging due to its subjective nature.''')
+    
 
 
 def model_vis(full_df):
-  st.markdown('''In this section, you can visualise the demographics of the different subgroups of the data. Firstly, you can see the demographic characteristics
-  of the candidates who have positive labels ("1") and negative labels ("0") which were assigned based on the scores calculated from the slider values you selected 
-  previously. Then, you can visualise the demographic distributions of the data which was used for training and evaluation of the models.''')
+  st.markdown('''In this section, you can visualise the demographics of the different subgroups of the data. Firstly, you can see the demographic characteristics of the candidates who have positive labels ("1") and negative labels ("0") which were assigned based on the scores calculated from the slider values you selected previously. Then, you can visualise the demographic distributions of the data which was used for training and evaluation of the models.''')
   choice = st.radio("Choose what to explore", ("Positive and negative labels", "Training and evaluation data"), horizontal=True)
   if choice == "Positive and negative labels":
     # Create a selectbox to choose a protected characteristic to explore
@@ -398,11 +377,7 @@ def model_vis(full_df):
 
       # Use function plot_data to plot selected data
       plot_data(data, selectbox_Char, characteristic_dict[selectbox_Char])
-    st.markdown('''You are visualising the demographic composition of those hypothetical employees who were assigned labels "1" or "0" based on your definitions of the
-    target variables. You might see differences in proportions of genders between the two models for the positive labels, as well as a major difference in the age between the positive and negative labels. 
-    Visualising the labels in this manner before training the model can help understand and mitigate differences in demographic representation in the modelling outcomes. Likely,
-    if all candidates labelled "1" were in younger age groups, the candidates selected by the model at the deployment stage will also be in younger age groups. Moreover, target
-    variable definition affects the proportional representation. Having defined two target variables, one can choose the dataset and the model which offers more proportional representation.''')
+    st.markdown('''You are visualising the demographic composition of those hypothetical employees who were assigned labels "1" or "0" based on your definitions of the target variables. You might see differences in proportions of genders between the two models for the positive labels, as well as a major difference in the age between the positive and negative labels. Visualising the labels in this manner before training the model can help understand and mitigate differences in demographic representation in the modelling outcomes. Likely, if all candidates labelled "1" were in younger age groups, the candidates selected by the model at the deployment stage will also be in younger age groups. Moreover, target variable definition affects the proportional representation. Having defined two target variables, one can choose the dataset and the model which offers more proportional representation.''')
 
 
   if choice == "Training and evaluation data":
@@ -430,17 +405,10 @@ def model_vis(full_df):
       # Use function plot_data to plot selected data
       plot_data(test, selectbox, characteristic_dict[selectbox])
   
-    st.markdown('''To train a machine learning model, the data has to be split into two different sets. The first set is the training data, which will be used to teach the model the relationships between the input features (11 subtest results)
-    and the corresponding labels ("0" and "1", assigned based on your definitions of target variables and the values you chose for the sliders). The second set is the test data, or evaluation data. It is used to assess the performance of the model. 
-    This is the data which is used to plot the confusion matrices and calculate the model metrics which you saw at the bottom of the "Define the target variable" page. This is also the data whose features you can explore in "Modelling outcomes".
-    It is important that the training and testing data are balanced. Here, you can compare the demographic composition of the training and evaluation data. The training and evaluation datasets compositions were the same and contained the same 
-    candidates and same features for both models A and B. However, the labels for each dataset were different and based on what you selected in "Define target variable".''')
+    st.markdown('''To train a machine learning model, the data has to be split into two different sets. The first set is the training data, which will be used to teach the model the relationships between the input features (11 subtest results) and the corresponding labels ("0" and "1", assigned based on your definitions of target variables and the values you chose for the sliders). The second set is the test data, or evaluation data. It is used to assess the performance of the model. This is the data which is used to plot the confusion matrices and calculate the model metrics which you saw at the bottom of the "Define the target variable" page. This is also the data whose features you can explore in "Modelling outcomes". It is important that the training and testing data are balanced. Here, you can compare the demographic composition of the training and evaluation data. The training and evaluation datasets compositions were the same and contained the same candidates and same features for both models A and B. However, the labels for each dataset were different and based on what you selected in "Define target variable".''')
 
 def filter_for_protected(data):
-  st.markdown('''This section shows equivalent metrics and confsion matrices to those presented at the bottom of "Define target variable", except applied to specific subgroups of the evaluation data, or the "hypothetical candidates"
-  as assessed by the different models. Sometimes, the overall model metrics can be deceptive when it comes to predicting the results for different groups in consideration. Ideally, for our models, the varying model metrics 
-  would be similar across different groups, which would indicate that the overall model performance is reflected in how this model performs for a given group. It is often not the case, and it is likely that you will see that models A
-  and B perform differently when it comes to those metrics. Even the same model can have different metrics for different subgroups.''')
+  st.markdown('''This section shows equivalent metrics and confusion matrices to those presented at the bottom of "Define target variable", except applied to specific subgroups of the evaluation data, or the "hypothetical candidates" as assessed by the different models. Sometimes, the overall model metrics can be deceptive when it comes to predicting the results for different groups in consideration. Ideally, for our models, the varying model metrics would be similar across different groups, which would indicate that the overall model performance is reflected in how this model performs for a given group. It is often not the case, and it is likely that you will see that models A and B perform differently when it comes to those metrics. Even the same model can have different metrics for different subgroups.''')
   model = st.selectbox('Choose which model outputs to assess', pred_dict.keys())
   test = data.loc[data[pred_dict[model]] != "train"]
 

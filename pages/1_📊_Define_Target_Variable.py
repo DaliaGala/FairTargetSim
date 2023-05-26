@@ -47,7 +47,6 @@ education_dict = {
     99: 'Other'
   }
 
-
 df_keys_dict = {
           'Divided Visual Attention' :'divided_visual_attention',
           'Forward Memory Span' :'forward_memory_span',
@@ -63,16 +62,15 @@ df_keys_dict = {
         }
 
 
-
 ### CREATE THE "TARGET VARIABLE DEFINITION" PAGE ###
 st.title('Target variable definition')
 st.markdown('''Imagine you are hiring for a position of your choice. Your task below is to define **two different notions** of what a 
              successful employee for that position is by assigning different levels of importance to cognitive characteristics. We have pre-filled the
              choices to reflect a manager who values attentiveness and numerical skills (A) and a manager who values interpersonal 
-             skills and memory (B). If you want to, change the slider values and click :red[“Assign labels and train your models”]. The 
+             skills and memory (B). If you want to, you change the slider values as you see fit. Then click :red[“Assign labels and train your models”]. The 
              dashboard will then label certain individuals as "successful employees" - in other words it will assign class labels "1" for 
-             successful and "0" for unsuccessful based on your selections. Now, after the dataset has been created, the dashboard will generate 
-             two different models, one for each of your target variable definitions. In the “See visualizations” page, you can see how your two 
+             successful and "0" for unsuccessful, based on your selections. Now, after this labelled dataset has been created, the dashboard will generate 
+             two different models, one for each of your target variable definitions. In the “See visualisations” page, you can see how your two 
              models differ in matters of bias and overall performance.''')
 
 st.markdown('''To see more about the nature of the target variable definition and how hiring models of the type we demonstrate in this 
@@ -176,76 +174,133 @@ with col2:
         st.markdown("- " + txt + " : " + f":green[{str(round((u*100), 2))}]")
       
     st.session_state["slider_values_B"] = selectionsB
-    
-            
+
+# col1, col2 = st.columns(2)
+
+# selectionsA = {}
+# selectionsB = {}
+
+# preselected_A = {"attention": , "reasoning", "memory", "behavioural restraint", "information processing speed"}
+# preselected_B = {}
+
+# groups = ["attention", "reasoning", "memory", "behavioural restraint", "information processing speed"]
+# results_dict_A = groups_dict
+# results_dict_B = groups_dict
+
+# with col1:
+#   st.subheader("Define target variable for model A ")
+#   for i in groups:
+#     name = f"{i} importance, model A"
+#     slider = st.slider(name, min_value=0, max_value=10)
+#     selectionsA[i] = slider
+
+#   results_dict_A = {k: selectionsA.get(v, v) for k, v in results_dict_A.items()}
+#   total = sum(results_dict_A.values())
+#   for (key, u) in results_dict_A.items():
+#     if total != 0:
+#       w = (u/total)
+#       results_dict_A[key] = w
+
+#   if st.checkbox("Show target variable A weights per subtest", key="A"):
+#     for (key, u) in results_dict_A.items():
+#       txt = key.replace("_", " ")
+#       st.markdown("- " + txt + " : " + f":green[{str(round((u*100), 2))}]")
+
+# with col2:
+#   st.subheader("Define target variable for model B ")
+#   for i in groups:
+#     name = f"{i} importance, model B"
+#     slider = st.slider(name, min_value=0, max_value=10)
+#     selectionsB[i] = slider
+
+#   results_dict_B = {k: selectionsB.get(v, v) for k, v in results_dict_B.items()}
+#   total = sum(results_dict_B.values())
+#   for (key, u) in results_dict_B.items():
+#     if total != 0:
+#       w = ((u/total))
+#       results_dict_B[key] = w
+
+#   if st.checkbox("Show target variable B weights per subtest", key = "B"):
+#     for (key, u) in results_dict_B.items():
+#       txt = key.replace("_", " ")
+#       st.markdown("- " + txt + " : " + f":green[{str(round((u*100), 2))}]")
+          
 if st.button("Assign labels and train your models", type = "primary", use_container_width = True):
-    scoreA = pd.DataFrame()
-    scoreB = pd.DataFrame()
-    test1 = all(value == 0 for value in results_dict_A.values())
-    test2 = all(value == 0 for value in results_dict_B.values())
-    if test1 == True or test2 == True:
-      st.error('Cannot train the models if you do not define the target variables. Make your selections for both models first!', icon="🚨")
-    else:
-      for (key, u) in results_dict_A.items():
-        scoreA[key] = u * dataframe[df_keys_dict[key]]
-        scoresA = scoreA.sum(axis=1)
-        dataframe['model_A_scores'] = scoresA
-      for (key, u) in results_dict_B.items():
-        scoreB[key] = u * dataframe[df_keys_dict[key]]
-        scoresB = scoreB.sum(axis=1)
-        dataframe['model_B_scores'] = scoresB
+  if 'complete_df' in st.session_state:
+      del st.session_state['complete_df']
+  if 'clean_df' in st.session_state:
+      del st.session_state['clean_df']
+  if 'cm_A' in st.session_state:
+      del st.session_state['cm_A']
+  if 'cm_B' in st.session_state:
+      del st.session_state['cm_B']
+  scoreA = pd.DataFrame()
+  scoreB = pd.DataFrame()
+  test1 = all(value == 0 for value in results_dict_A.values())
+  test2 = all(value == 0 for value in results_dict_B.values())
+  if test1 == True or test2 == True:
+    st.error('Cannot train the models if you do not define the target variables. Make your selections for both models first!', icon="🚨")
+  else:
+    for (key, u) in results_dict_A.items():
+      scoreA[df_keys_dict[key]] = u * dataframe[df_keys_dict[key]]
+      scoresA = scoreA.sum(axis=1)
+      dataframe['model_A_scores'] = scoresA
+    for (key, u) in results_dict_B.items():
+      scoreB[df_keys_dict[key]] = u * dataframe[df_keys_dict[key]]
+      scoresB = scoreB.sum(axis=1)
+      dataframe['model_B_scores'] = scoresB
+    
+    new_annotated = assign_labels_by_probabilities(dataframe, "model_A_scores", "Model_A_label", "Model_A_probabilities", quantile=0.85, num_samples=100)
+    new_annotated = assign_labels_by_probabilities(new_annotated, "model_B_scores", "Model_B_label", "Model_B_probabilities", quantile=0.85, num_samples=100)
+    new_annotated = new_annotated.reset_index()
+
+
+    clean_data = drop_data(new_annotated)
+    # specify the columns of interest
+    selected_cols = ['Model_A_label', 'Model_B_label']
+    
+    # count the number of rows where all three selected columns have a value of 1
+    num_rows_with_all_flags_1 = len(new_annotated[new_annotated[selected_cols].sum(axis=1) == len(selected_cols)])
+    
+    # print the result
+    st.write(f"Shared candidates between your target variables: :green[{num_rows_with_all_flags_1}].")
+    with st.spinner('Please wait... The models will be trained now.'):
+
+      X_data, Y_data_A, Y_data_B = clean_data.iloc[:, :-2], clean_data.iloc[:, [-2]], clean_data.iloc[:, [-1]]
+      X_data = X_data.drop(["index"], axis = 1)
+      Y_data_B = Y_data_B.reset_index()
+      X_train, X_test, y_train_A, y_test_A = train_test_split(X_data, Y_data_A, test_size=0.2)
+      y_train_A = y_train_A.reset_index()
+      y_test_A = y_test_A.reset_index()
+      y_train_B = pd.merge(y_train_A,Y_data_B[['index', 'Model_B_label']],on='index', how='left')
+      y_test_B = pd.merge(y_test_A,Y_data_B[['index', 'Model_B_label']],on='index', how='left')
+      y_train_B = y_train_B.drop(labels='Model_A_label', axis = 1)
+      y_test_B = y_test_B.drop(labels='Model_A_label', axis = 1)
+      y_train_A = y_train_A.set_index("index")
+      y_train_B = y_train_B.set_index("index")
+      y_test_A = y_test_A.set_index("index")
+      y_test_B = y_test_B.set_index("index")
+
+      accuracy_A, precision_A, recall_A, X_full_A, cm_A, baseline_accuracy_A = train_and_predict("A", X_train, X_test, y_train_A, y_test_A)
+      accuracy_B, precision_B, recall_B, X_full_B, cm_B, baseline_accuracy_B = train_and_predict("B", X_train, X_test, y_train_B, y_test_B)
+      full = pd.merge(X_full_A,X_full_B[['index','Predicted_B', 'Prob_0_B', "Prob_1_B"]],on='index', how='left')
+      complete = pd.merge(full,new_annotated[['index', 'age', 'gender', 'education level', 'country', 'Model_A_label', 'Model_B_label', 'model_A_scores', 'model_B_scores']],on='index', how='left')
+      complete=complete.replace({"education level": education_dict})
+      complete = complete.rename(columns={"index": "Candidate ID"})
       
-      new_annotated = assign_labels_by_probabilities(dataframe, "model_A_scores", "Model_A_label", "Model_A_probabilities", quantile=0.85, num_samples=100)
-      new_annotated = assign_labels_by_probabilities(new_annotated, "model_B_scores", "Model_B_label", "Model_B_probabilities", quantile=0.85, num_samples=100)
-      new_annotated = new_annotated.reset_index()
+      if 'complete_df' not in st.session_state:
+        st.session_state['complete_df'] = complete
+      if 'clean_df' not in st.session_state:
+        st.session_state['clean_df'] = clean_data
+      if 'cm_A' not in st.session_state:
+        st.session_state['cm_A'] = cm_A
+      if 'cm_B' not in st.session_state:
+        st.session_state['cm_B'] = cm_B
 
+    row1_space1, row1_1, row1_space2, row1_2, row1_space3 = st.columns((0.1, 3, 0.1, 3, 0.1))
+    with row1_1:
+      st.write(f"Model A accuracy: :green[{baseline_accuracy_A}].")
+    with row1_2:
+      st.write(f"Model B accuracy: :green[{baseline_accuracy_B}].")
 
-      clean_data = drop_data(new_annotated)
-      # specify the columns of interest
-      selected_cols = ['Model_A_label', 'Model_B_label']
-      
-      # count the number of rows where all three selected columns have a value of 1
-      num_rows_with_all_flags_1 = len(new_annotated[new_annotated[selected_cols].sum(axis=1) == len(selected_cols)])
-      
-      # print the result
-      st.write(f"Shared candidates between your target variables: :green[{num_rows_with_all_flags_1}].")
-      with st.spinner('Please wait... The models will be trained now.'):
-
-        X_data, Y_data_A, Y_data_B = clean_data.iloc[:, :-2], clean_data.iloc[:, [-2]], clean_data.iloc[:, [-1]]
-        X_data = X_data.drop(["index"], axis = 1)
-        Y_data_B = Y_data_B.reset_index()
-        X_train, X_test, y_train_A, y_test_A = train_test_split(X_data, Y_data_A, test_size=0.2)
-        y_train_A = y_train_A.reset_index()
-        y_test_A = y_test_A.reset_index()
-        y_train_B = pd.merge(y_train_A,Y_data_B[['index', 'Model_B_label']],on='index', how='left')
-        y_test_B = pd.merge(y_test_A,Y_data_B[['index', 'Model_B_label']],on='index', how='left')
-        y_train_B = y_train_B.drop(labels='Model_A_label', axis = 1)
-        y_test_B = y_test_B.drop(labels='Model_A_label', axis = 1)
-        y_train_A = y_train_A.set_index("index")
-        y_train_B = y_train_B.set_index("index")
-        y_test_A = y_test_A.set_index("index")
-        y_test_B = y_test_B.set_index("index")
-
-        accuracy_A, precision_A, recall_A, X_full_A, cm_A, baseline_accuracy_A = train_and_predict("A", X_train, X_test, y_train_A, y_test_A)
-        accuracy_B, precision_B, recall_B, X_full_B, cm_B, baseline_accuracy_B = train_and_predict("B", X_train, X_test, y_train_B, y_test_B)
-        full = pd.merge(X_full_A,X_full_B[['index','Predicted_B', 'Prob_0_B', "Prob_1_B"]],on='index', how='left')
-        complete = pd.merge(full,new_annotated[['index', 'age', 'gender', 'education level', 'country', 'Model_A_label', 'Model_B_label', 'model_A_scores', 'model_B_scores']],on='index', how='left')
-        complete=complete.replace({"education level": education_dict})
-        complete = complete.rename(columns={"index": "Candidate ID"})
-        
-        if 'complete_df' not in st.session_state:
-          st.session_state['complete_df'] = complete
-        if 'clean_df' not in st.session_state:
-          st.session_state['clean_df'] = clean_data
-        if 'cm_A' not in st.session_state:
-          st.session_state['cm_A'] = cm_A
-        if 'cm_B' not in st.session_state:
-          st.session_state['cm_B'] = cm_B
-
-      row1_space1, row1_1, row1_space2, row1_2, row1_space3 = st.columns((0.1, 3, 0.1, 3, 0.1))
-      with row1_1:
-        st.write(f"Model A accuracy: :green[{baseline_accuracy_A}].")
-      with row1_2:
-        st.write(f"Model B accuracy: :green[{baseline_accuracy_B}].")
-
-      st.success('''Success! You have defined the target variables and trained your models. Click "Visualise your models" in the sidebar to explore.''')
+    st.success('''Success! You have defined the target variables and trained your models. Click "Visualise your models" in the sidebar to explore.''')
