@@ -138,10 +138,10 @@ with col1:
             w = (u/total)
             results_dict_A[key] = w
 
-        if st.checkbox("Show target variable A weights per subtest", key="A"):
-          for (key, u) in results_dict_A.items():
-            txt = key.replace("_", " ")
-            st.markdown("- " + txt + " : " + f":green[{str(round((u*100), 2))}]")
+    if st.checkbox("Show target variable A weights per subtest", key="A"):
+      for (key, u) in results_dict_A.items():
+        txt = key.replace("_", " ")
+        st.markdown("- " + txt + " : " + f":green[{str(round((u*100), 2))}]")
         
     
     st.session_state["slider_values_A"] = selectionsA
@@ -169,10 +169,10 @@ with col2:
           w = ((u/total))
           results_dict_B[key] = w
 
-      if st.checkbox("Show target variable B weights per subtest", key = "B"):
-        for (key, u) in results_dict_B.items():
-          txt = key.replace("_", " ")
-          st.markdown("- " + txt + " : " + f":green[{str(round((u*100), 2))}]")
+    if st.checkbox("Show target variable B weights per subtest", key = "B"):
+      for (key, u) in results_dict_B.items():
+        txt = key.replace("_", " ")
+        st.markdown("- " + txt + " : " + f":green[{str(round((u*100), 2))}]")
       
     st.session_state["slider_values_B"] = selectionsB
     
