@@ -117,8 +117,8 @@ results_dict_B = groups_dict
 
 with col1:
     st.subheader("Define target variable for model A ")
-    for count, value in enumerate(groups):
-        selectionsA[value] = list_values_A[count]
+    for i in groups:
+        selectionsA[i] = 0
         
     if "slider_values_A" not in st.session_state:
         st.session_state["slider_values_A"] = selectionsA
@@ -148,8 +148,8 @@ with col1:
 
 with col2:
     st.subheader("Define target variable for model B ")
-    for count, value in enumerate(groups):
-        selectionsB[value] = list_values_B[count]
+    for i in groups:
+        selectionsB[i] = 0
         
     if "slider_values_B" not in st.session_state:
         st.session_state["slider_values_B"] = selectionsB
