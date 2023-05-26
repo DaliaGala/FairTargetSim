@@ -51,17 +51,20 @@ education_dict = {
 
 ### CREATE THE "TARGET VARIABLE DEFINITION" PAGE ###
 st.title('Target variable definition')
-st.markdown('''Pretend you’re hiring for a position of your choice. Your task below is to define **two different notions** of what a 
-             successful employee for that position is by assigning different weights to characteristics. We have pre-filled the
+st.markdown('''Imagine you are hiring for a position of your choice. Your task below is to define **two different notions** of what a 
+             successful employee for that position is by assigning different levels of importance to cognitive characteristics. We have pre-filled the
              choices to reflect a manager who values attentiveness and numerical skills (A) and a manager who values interpersonal 
              skills and memory (B). If you want to, change the slider values and click :red[“Assign labels and train your models”]. The 
-             dashboard will add class labels "1" and "0" based on your selections,a dn generate two different models, one for each of your 
-             target variable definitions. In the “See visualizations” page, you can see how your two models differ in matters of bias and 
-             overall performance.''')
+             dashboard will then label certain individuals as "successful employees" - in other words it will assign class labels "1" for 
+             successful and "0" for unsuccessful based on your selections. Now, after the dataset has been created, the dashboard will generate 
+             two different models, one for each of your target variable definitions. In the “See visualizations” page, you can see how your two 
+             models differ in matters of bias and overall performance.''')
+
+st.markdown('''To see more about the nature of target variable definition and how hiring models of the type we demonstrate in this 
+            dashboard work, click :green["See explanation] below.''')
 
 
 with st.expander("See explanation"):
-    st.markdown('''On this page, you can define two different target variables for a hiring algorithm: each target variable is defined in terms of the cognitive characteristics that one might think a successful employee has. Once you define the two target variables, you click “Assign labels and train your models” and the dashboard will generate two different models, one for each of your target variable definitions. In the “See visualizations” page, you can see how your two datasets and models differ in matters of bias and overall performance.''')
     
     st.markdown('''The kind of models that the dashboard builds are of a kind increasingly used in hiring software: companies will have applicants play games that test for different kinds of cognitive ability (like reasoning or information-processing speed). And then hiring software will be built to predict which applicants will be successful based on which cognitive characteristics they have. What cognitive characteristics make for a successful employee? This will depend on what role is being hired for (salesperson? engineer? - the choice is yours). And it will also depend on how we define “successful employee.”''')
     
