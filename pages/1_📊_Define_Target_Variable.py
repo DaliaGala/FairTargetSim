@@ -117,10 +117,10 @@ results_dict_B = groups_dict
 
 with col1:
     st.subheader("Define target variable for model A ")
-    for count, value in enumerate(groups):
-        selectionsA[value] = list_values_A[count]
         
     if "slider_values_A" not in st.session_state:
+        for count, value in enumerate(groups):
+            selectionsA[value] = list_values_A[count]
         st.session_state["slider_values_A"] = selectionsA
     else:
         selectionsA = st.session_state["slider_values_A"]
@@ -131,12 +131,12 @@ with col1:
         slider = st.slider(nameA, min_value=0, max_value=10, value = value)
         selectionsA[i] = slider
         
-        results_dict_A = {k: selectionsA.get(v, v) for k, v in results_dict_A.items()}
-        total = sum(results_dict_A.values())
-        for (key, u) in results_dict_A.items():
-          if total != 0:
-            w = (u/total)
-            results_dict_A[key] = w
+    results_dict_A = {k: selectionsA.get(v, v) for k, v in results_dict_A.items()}
+    total = sum(results_dict_A.values())
+    for (key, u) in results_dict_A.items():
+      if total != 0:
+        w = (u/total)
+        results_dict_A[key] = w
 
     if st.checkbox("Show target variable A weights per subtest", key="A"):
       for (key, u) in results_dict_A.items():
@@ -149,10 +149,10 @@ with col1:
 
 with col2:
     st.subheader("Define target variable for model B ")
-    for count, value in enumerate(groups):
-        selectionsB[value] = list_values_B[count]
         
     if "slider_values_B" not in st.session_state:
+        for count, value in enumerate(groups):
+            selectionsB[value] = list_values_B[count]
         st.session_state["slider_values_B"] = selectionsB
     else:
         selectionsB = st.session_state["slider_values_B"]
@@ -162,12 +162,13 @@ with col2:
       value = selectionsB[i]
       slider = st.slider(nameB, min_value=0, max_value=10, value = value)
       selectionsB[i] = slider
-      results_dict_B = {k: selectionsB.get(v, v) for k, v in results_dict_B.items()}
-      total = sum(results_dict_B.values())
-      for (key, u) in results_dict_B.items():
-        if total != 0:
-          w = ((u/total))
-          results_dict_B[key] = w
+      
+    results_dict_B = {k: selectionsB.get(v, v) for k, v in results_dict_B.items()}
+    total = sum(results_dict_B.values())
+    for (key, u) in results_dict_B.items():
+      if total != 0:
+        w = ((u/total))
+        results_dict_B[key] = w
 
     if st.checkbox("Show target variable B weights per subtest", key = "B"):
       for (key, u) in results_dict_B.items():
