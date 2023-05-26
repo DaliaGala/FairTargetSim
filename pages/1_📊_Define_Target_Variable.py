@@ -48,6 +48,21 @@ education_dict = {
   }
 
 
+df_keys_dict = {
+          'Divided Visual Attention' :'divided_visual_attention',
+          'Forward Memory Span' :'forward_memory_span',
+          'Arithmetic Reasoning' : 'arithmetic_problem_solving',
+          'Grammatical Reasoning'  : 'logical_reasoning',
+          'Go/No go': 'adaptive_behaviour_response_inhibition',
+          'Reverse_Memory_Span' : 'reverse_memory_span',
+          'Verbal List Learning': 'episodic_verbal_learning',
+          'Delayed Verbal List Learning': 'delayed_recall',
+          'Digit Symbol Coding': 'abstract_symbol_processing_speed',
+          'Trail Making Part A' :'numerical_info_processing_speed',
+          'Trail Making Part B': 'numerical_and_lexical_info_processing_speed'
+        }
+
+
 
 ### CREATE THE "TARGET VARIABLE DEFINITION" PAGE ###
 st.title('Target variable definition')
@@ -166,11 +181,11 @@ if st.button("Assign labels and train your models", type = "primary", use_contai
       st.error('Cannot train the models if you do not define the target variables. Make your selections for both models first!', icon="🚨")
     else:
       for (key, u) in results_dict_A.items():
-        scoreA[key] = u * dataframe[key]
+        scoreA[key] = u * dataframe[df_keys_dict[key]]
         scoresA = scoreA.sum(axis=1)
         dataframe['model_A_scores'] = scoresA
       for (key, u) in results_dict_B.items():
-        scoreB[key] = u * dataframe[key]
+        scoreB[key] = u * dataframe[df_keys_dict[key]]
         scoresB = scoreB.sum(axis=1)
         dataframe['model_B_scores'] = scoresB
       
