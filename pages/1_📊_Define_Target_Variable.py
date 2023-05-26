@@ -111,13 +111,13 @@ results_dict_B = groups_dict
 
 with col1:
     st.subheader("Define target variable for model A ")
-        
-    if "slider_values_A" not in st.session_state:
-        selectionsA = {"attention" : 9,
+    selectionsA = {"attention" : 9,
                        "reasoning": 10,
                        "memory": 2,
                        "behavioural restraint": 1,
                        "information processing speed": 5}
+        
+    if "slider_values_A" not in st.session_state:
         st.session_state["slider_values_A"] = selectionsA
     else:
         selectionsA = st.session_state["slider_values_A"]
@@ -145,24 +145,24 @@ with col1:
 
 with col2:
     st.subheader("Define target variable for model B ")
-        
-    if "slider_values_B" not in st.session_state:
-        selectionsB = {"attention" : 1,
+    selectionsB = {"attention" : 1,
                        "reasoning": 2,
                        "memory": 10,
                        "behavioural restraint": 9,
                        "information processing speed": 3}
+        
+    if "slider_values_B" not in st.session_state:
         st.session_state["slider_values_B"] = selectionsB
     else:
         selectionsB = st.session_state["slider_values_B"]
             
     for i in groups:
       nameB = f"{i} importance, model B"
-      value = selectionsB[i]
+      value = st.session_state["slider_values_B"][i]
       slider = st.slider(nameB, min_value=0, max_value=10, value = value)
-      selectionsB[i] = slider
+      st.session_state["slider_values_B"][i] = slider
       
-    st.session_state["slider_values_B"] = selectionsB
+    selectionsB = st.session_state["slider_values_B"]
     
     results_dict_B = {k: selectionsB.get(v, v) for k, v in results_dict_B.items()}
     total = sum(results_dict_B.values())
