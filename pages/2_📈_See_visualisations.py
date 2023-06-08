@@ -495,6 +495,7 @@ def filter_for_protected(data):
     selectbox_Char = 'age_bins'
   # which_group = st.selectbox('Which group?', test[selectbox_Char].unique())
   df = pd.DataFrame({'Measure': ['True Positive Rate', 'True Negative Rate', 'Positive Predictive Value', 'Negative Predictive Value', 'False Positive Rate', 'False Negative Rate', 'False Discovery Rate']})
+  st.write(test[selectbox_Char].unique())
   for group in test[selectbox_Char].unique():
       rslt_df = test[test[selectbox_Char] == group] 
       y_true = [int(numeric_string) for numeric_string in rslt_df[model_dict[model]]]
