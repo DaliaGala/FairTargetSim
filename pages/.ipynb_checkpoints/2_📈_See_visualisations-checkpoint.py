@@ -502,6 +502,7 @@ def filter_for_protected(data):
       cm = confusion_matrix(y_true, y_pred)
       if cm.shape == (1,1):
           cm = np.array([[cm[0, 0], 0], [0, 0]])
+      st.write(group)
       st.table(cm)
       d = plot_conf_rates(cm)
       df[f"{group}"] = d["Score"]
