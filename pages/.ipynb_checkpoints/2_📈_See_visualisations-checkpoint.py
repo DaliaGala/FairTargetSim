@@ -489,13 +489,12 @@ def filter_for_protected(data):
 
   selectbox_Char = st.selectbox('Protected characteristic', characteristic_dict.keys())
   if selectbox_Char == 'age':
-    bins= [18,20,30,40,50,60,70,80,90]
+    bins= [18,20,30,40,50,60,70,80,91]
     labels = ['18-20','21-30','31-40','41-50','51-60','61-70','71-80','81-90']
     test['age_bins'] = pd.cut(test['age'], bins=bins, labels=labels, right=False)
     selectbox_Char = 'age_bins'
   # which_group = st.selectbox('Which group?', test[selectbox_Char].unique())
   df = pd.DataFrame({'Measure': ['True Positive Rate', 'True Negative Rate', 'Positive Predictive Value', 'Negative Predictive Value', 'False Positive Rate', 'False Negative Rate', 'False Discovery Rate']})
-  st.write(test)
   for group in test[selectbox_Char].unique():
       rslt_df = test[test[selectbox_Char] == group] 
       y_true = [int(numeric_string) for numeric_string in rslt_df[model_dict[model]]]
@@ -503,8 +502,6 @@ def filter_for_protected(data):
       cm = confusion_matrix(y_true, y_pred)
       if cm.shape == (1,1):
           cm = np.array([[cm[0, 0], 0], [0, 0]])
-      st.write(group)
-      st.table(cm)
       d = plot_conf_rates(cm)
       df[f"{group}"] = d["Score"]
 
