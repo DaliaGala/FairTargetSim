@@ -222,7 +222,7 @@ def create_confusion_matrix_heatmap(confusion_matrix, model):
                     z=confusion_matrix,
                     text=labels,
                     texttemplate="%{text}",
-                    textfont={"size":20}), layout = layout)
+                    textfont={"size":15}), layout = layout)
     st.plotly_chart(fig, use_container_width = True)
 
 # Display model metrics as tables
