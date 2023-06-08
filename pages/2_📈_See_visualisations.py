@@ -503,7 +503,7 @@ def filter_for_protected(data):
       if cm.shape == (1,1):
           cm = np.array([[cm[0, 0], 0], [0, 0]])
       d = plot_conf_rates(cm)
-      df[group] = d["Score"]
+      df[f"{group}"] = d["Score"]
 
   fig = go.Figure()
   for group in test[selectbox_Char].unique():
