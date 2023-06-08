@@ -21,6 +21,7 @@ from sklearn import svm
 from sklearn import metrics
 from sklearn.metrics import accuracy_score
 from statkit.non_parametric import bootstrap_score
+import plotly.graph_objects as go
 
 ### FUNCTIONS ###
 
@@ -196,18 +197,33 @@ def run_PCA(df, drop_1, retain_this, n):
   return pca, finalDf2, labels, coeff, principalComponents
 
 # Plot confusion matrices as heatmaps
-def create_confusion_matrix_heatmap(confusion_matrix):
-  sns.set(font_scale=1.4)
-  group_names = ['True Neg (TN)','False Pos (FP)','False Neg (FN)','True Pos (TP)']
-  group_counts = ["{0:0.0f}".format(value) for value in confusion_matrix.flatten()]
-  group_percentages = ["{0:.2%}".format(value) for value in confusion_matrix.flatten()/np.sum(confusion_matrix)]
-  labels = [f"{v1}\n{v2}\n{v3}" for v1, v2, v3 in zip(group_names,group_counts,group_percentages)]
-  labels = np.asarray(labels).reshape(2,2)
-  fig, ax = plt.subplots()
-  sns.heatmap(confusion_matrix, annot=labels, cmap='Blues', fmt='')
-  plt.xlabel('Predicted')
-  plt.ylabel('Actual')
-  st.write(fig)
+def create_confusion_matrix_heatmap(confusion_matrix, model):
+    group_names = ['True Negative (TN)','False Positive (FP)','False Negative (FN)','True Positive (TP)']
+    group_counts = ["{0:0.0f}".format(value) for value in confusion_matrix.flatten()]
+    group_percentages = ["{0:.2%}".format(value) for value in confusion_matrix.flatten()/np.sum(confusion_matrix)]
+    labels = [f"{v1}<br>{v2}<br>{v3}" for v1, v2, v3 in zip(group_names,group_counts,group_percentages)]
+    labels = np.asarray(labels).reshape(2,2)
+    
+    layout = {
+        "title": f"Confusion Matrix, {model}", 
+        "xaxis": {
+            "title": "Predicted value", 
+            "tickmode" : 'array', 
+            "tickvals" : [0, 1], 
+            "ticktext" : ["0", "1"]}, 
+        "yaxis": {
+            "title": "Actual value",
+            "title": "Predicted value", 
+            "tickmode" : 'array', 
+            "tickvals" : [0, 1], 
+            "ticktext" : ["0", "1"]},
+        }
+    fig = go.Figure(data=go.Heatmap(
+                    z=confusion_matrix,
+                    text=labels,
+                    texttemplate="%{text}",
+                    textfont={"size":20}), layout = layout)
+    st.plotly_chart(fig, use_container_width = True)
 
 # Display model metrics as tables
 def plot_conf_rates(confusion_matrix):
@@ -235,18 +251,6 @@ def plot_conf_rates(confusion_matrix):
   # Overall accuracy
   ACC = (TP+TN)/(TP+FP+FN+TN)
   d = {'Measure': ['True Positive Rate', 'True Negative Rate', 'Positive Predictive Value', 'Negative Predictive Value', 'False Positive Rate', 'False Negative Rate', 'False Discovery Rate'], 
-  'Equation' : ['TPR = TP/(TP+FN)', 'TNR = TN/(TN+FP)', 'PPV = TP/(TP+FP)', 'NPV = TN/(TN+FN)', 'FPR = FP/(FP+TN)', 'FNR = FN/(TP+FN)', 'FDR = FP/(TP+FP'], 
+  'Equation' : ['TPR = TP/(TP+FN)', 'TNR = TN/(TN+FP)', 'PPV = TP/(TP+FP)', 'NPV = TN/(TN+FN)', 'FPR = FP/(FP+TN)', 'FNR = FN/(TP+FN)', 'FDR = FP/(TP+FP)'], 
   'Score': [TPR, TNR, PPV, NPV, FPR, FNR, FDR]}
-  # CSS to inject contained in a string
-  hide_table_row_index = """
-            <style>
-            thead tr th:first-child {display:none}
-            tbody th {display:none}
-            </style>
-            """
-
-  # Inject CSS with Markdown
-  st.markdown(hide_table_row_index, unsafe_allow_html=True)
-
-  st.table(d)
-  
+  return d

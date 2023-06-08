@@ -544,6 +544,12 @@ def filter_for_protected(data):
     st.markdown(hide_table_row_index, unsafe_allow_html=True)
     st.markdown(f"Accuracy rates for {selectbox_Char}")
     st.table(df)
+      
+  # row1_space1, row1_1, row1_space2, row1_2, row1_space3 = st.columns((0.1, 3, 0.1, 3, 0.1))
+  # with row1_1:
+  #   create_confusion_matrix_heatmap(cm, model)
+  # with row1_2:
+  #   plot_conf_rates(cm)
 
 def data_plot(key1, key2, key3, key4):
   st.title('''Visualise the generated datasets and model outcomes''')

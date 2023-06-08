@@ -12,7 +12,6 @@ import streamlit as st
 ### PAGE CONFIG ###
 st.set_page_config(page_title='EquiVar', page_icon=':robot_face:', layout='wide')
 
-
 #Set title
 st.title('EquiVar - Target Variable Definition Simulator')
 
@@ -27,18 +26,38 @@ Defining the target variable is not only difficult; it can also have profound ef
 
   """
   )
-    
+
+
+st.subheader('Dashboard structure')
 st.markdown(
   """The interactive dashboard we have developed is designed to help practitioners—those who build, procure, or deploy hiring algorithms—to understand, in concrete terms, how decisions about defining target variables impact fairness and bias. 
 The dashboard has three parts:""")
 st.markdown('''- **Define target variables.** You can define two different target variables for a “toy” hiring algorithm—two different ways of understanding what counts as a successful employee—by assigning different levels of cognitive characteristics (like reasoning skills, and information processing speed) that employees can have. Once you have defined the two target variables, our dashboard will, drawing on a data-set of the cognitive tests from real-world people, build two hiring models, A and B. Model A predicts which candidates will be successful employees on your first definition; model B predicts which candidates will be successful employees on your second definition.''')
 st.markdown("- **See visualizations.** You can explore how the Datasets A and B generated based on your selections, and Models A and B trained on these datasets, differ in issues of fairness and bias. You can see, for example, which model selects more female applicants, or which model is more accurate for older applicants. You can also explore how Models A and B differ not just in matters of bias, but also in their overall performance: for example, in their overall accuracy.")
-st.markdown("- **Putting the idea into practice.** A practitioner who is building or using their own hiring algorithms cannot take our dashboard “off the shelf” and apply it directly to their own data or algorithms. In this section, we explain how a practitioner could adapt our dashboard, and implement the ideas behind it, into their own work. [Note to Medb and Ray: this section is something we’re currently working on and is not in the current version of dashboard that you’re seeing].")
+st.markdown("- **Putting the idea into practice.** A practitioner who is building or using their own hiring algorithms cannot take our dashboard “off the shelf” and apply it directly to their own data or algorithms. In this section, we explain how a practitioner could adapt our dashboard, and implement the ideas behind it, into their own work.")
 
+st.subheader('Example')
+st.markdown('''Here, we present an example of the dashboard in action. Minimally changing the weights of the tests results in comlpetely different coutcomes for the models.''')
 
+st.markdown('''We assigned the same weights to all cognitive characteristics but two, and trained two separate models, A and B.''')
+st.image('./images/tests.png')
+
+st.markdown('''The minor change in the weights of the characteristics has resulted in a major change in the selected candidates demographics.''')
+st.image('./images/pie_charts.png')
+
+st.markdown('''The proportional representation of female candidates was two times better for model A versus model B.''')
+st.image('./images/proportional.png')
 
 #Create info boxes for authors, links and GitHub
-st.info('**Data Scientist: [Dalia Sara Gala](https://twitter.com/dalia_science)**')
-st.info('**Philosophy Lead: [Milo Phillips-Brown](https://www.milopb.com/)**')
-st.info('**Accenture team: [@The Dock](https://www.accenture.com/gb-en/services/about/innovation-hub-the-dock)**')
-st.info('**GitHub: [Hiring-model](https://github.com/DaliaGala/Hiring-model)**')
+# Set columns
+c1, c2, c3, c4 = st.columns((2.2,2.6,2,1.8))
+
+#Create info boxes for authors, links and GitHub
+with c1:
+  st.info('**Data Scientist: [Dalia Sara Gala](https://twitter.com/dalia_science)**')
+with c2:
+  st.info('**Philosophy Lead: [Milo Phillips-Brown](https://www.milopb.com/)**')
+with c3:
+  st.info('**Accenture team: [@The Dock](https://www.accenture.com/gb-en/services/about/innovation-hub-the-dock)**')
+with c4:
+  st.info('**GitHub: [Hiring-model](https://github.com/DaliaGala/Hiring-model)**')
