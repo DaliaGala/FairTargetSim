@@ -45,9 +45,6 @@ st.image('./images/tests.png')
 st.markdown('''The minor change in the weights of the characteristics has resulted in a major change in the selected candidates demographics.''')
 st.image('./images/pie_charts.png')
 
-st.markdown('''The proportional representation of female candidates was two times better for model A versus model B.''')
-st.image('./images/proportional.png')
-
 #Create info boxes for authors, links and GitHub
 # Set columns
 c1, c2, c3, c4 = st.columns((2.2,2.6,2,1.8))
