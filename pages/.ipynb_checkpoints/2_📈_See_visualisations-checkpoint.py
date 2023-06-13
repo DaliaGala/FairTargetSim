@@ -298,52 +298,48 @@ def PCA_general(full_df, dataframe_PCA):
       labels_A_proper = { v:k for k,v in df_keys_dict.items()}
       loadings_df["Features"] = labels_A_proper.values()
       with c1:
-          fig = px.bar(loadings_df, x="Features", y="PC1")
-          st.plotly_chart(fig, use_container_width = True)
           fig = px.bar(loadings_df, x="PC1", y="Features", orientation = 'h')
           st.plotly_chart(fig, use_container_width = True)
       with c2:
-          fig = px.bar(loadings_df, x="Features", y="PC2")
-          st.plotly_chart(fig, use_container_width = True)
           fig = px.bar(loadings_df, x="PC2", y="Features", orientation = 'h')
           st.plotly_chart(fig, use_container_width = True)
 
-      fig = go.Figure()
-      fig.add_trace(go.Bar(
-          x=loadings_df["PC1"],
-          y=loadings_df["Features"],  
-          name='Principal Component 1',
-          marker_color='rgb(55, 83, 109)',
-          orientation='h'
-      ))
-      fig.add_trace(go.Bar(
-          x=loadings_df["PC2"],
-          y=loadings_df["Features"],
-          name='Principal Component 2',
-          marker_color='rgb(26, 118, 255)',
-          orientation='h'
-      ))
-      fig.update_layout(
-          title='Component loadings',
-          xaxis_tickfont_size=14,
-          xaxis=dict(
-              title='Loading value'),
-          yaxis=dict(
-              title='Feature',
-              titlefont_size=16,
-              tickfont_size=14,
-          ),
-          legend=dict(
-              bgcolor='rgba(255, 255, 255, 0)',
-              bordercolor='rgba(255, 255, 255, 0)'
-          ),
-    barmode='group',
-    bargap=0.15, # gap between bars of adjacent location coordinates.
-    bargroupgap=0.1 # gap between bars of the same location coordinate.
-      )
-      st.plotly_chart(fig, use_container_width = True)
+    #   fig = go.Figure()
+    #   fig.add_trace(go.Bar(
+    #       x=loadings_df["PC1"],
+    #       y=loadings_df["Features"],  
+    #       name='Principal Component 1',
+    #       marker_color='rgb(55, 83, 109)',
+    #       orientation='h'
+    #   ))
+    #   fig.add_trace(go.Bar(
+    #       x=loadings_df["PC2"],
+    #       y=loadings_df["Features"],
+    #       name='Principal Component 2',
+    #       marker_color='rgb(26, 118, 255)',
+    #       orientation='h'
+    #   ))
+    #   fig.update_layout(
+    #       title='Component loadings',
+    #       xaxis_tickfont_size=14,
+    #       xaxis=dict(
+    #           title='Loading value'),
+    #       yaxis=dict(
+    #           title='Feature',
+    #           titlefont_size=16,
+    #           tickfont_size=14,
+    #       ),
+    #       legend=dict(
+    #           bgcolor='rgba(255, 255, 255, 0)',
+    #           bordercolor='rgba(255, 255, 255, 0)'
+    #       ),
+    # barmode='group',
+    # bargap=0.15, # gap between bars of adjacent location coordinates.
+    # bargroupgap=0.1 # gap between bars of the same location coordinate.
+    #   )
+    #   st.plotly_chart(fig, use_container_width = True)
       
-      st.markdown('''On this plot, PCA component loadings can be explored. These facilitate the understanding of how much each variable (which there are 11 of) contributes to a particular principal component. Here, the 11 variables were reduced to 2 components, which are labelled PC1 and PC2 on the x and y axes. The magnitude of the loading (here displayed as an arrow per each variable) indicates how strong the relationship between the variable and the component is. Therefore, the longer the arrow, the stronger the relationship between that component and that variable. The loading's sign can be positive or negative. This indicates whether the principal component and that variable are positively or negatively correlated. We can see that multiple variables are positively correlated with PC2. Two variables, episodic verbal learning and delayed recall are negatively correlated with both of the components, which means that the variance in them is not well represented by these two components.''')
+      st.markdown('''On this plot, PCA component loadings can be explored. These facilitate the understanding of how much each variable (which there are 11 of) contributes to a particular principal component. Here, the 11 variables were reduced to 2 components, which are labelled PC1 and PC2. The magnitude of the loading (here displayed as the size of the bar in the bar chart) indicates how strong the relationship between the variable and the component is. Therefore, the higher the bar, the stronger the relationship between that component and that variable. The loading's sign can be positive or negative. This indicates whether the principal component and that variable are positively or negatively correlated. We can see that multiple variables are positively correlated with PC2. Two variables, episodic verbal learning and delayed recall are negatively correlated with both of the components.''')
 
 
 def model_out(full_df):
