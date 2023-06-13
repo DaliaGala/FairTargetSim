@@ -207,12 +207,11 @@ def create_confusion_matrix_heatmap(confusion_matrix, model):
     layout = {
         "title": f"Confusion Matrix, {model}", 
         "xaxis": {
-            "title": "Predicted value", 
+            "title": "Actual value", 
             "tickmode" : 'array', 
             "tickvals" : [0, 1], 
             "ticktext" : ["0", "1"]}, 
         "yaxis": {
-            "title": "Actual value",
             "title": "Predicted value", 
             "tickmode" : 'array', 
             "tickvals" : [0, 1], 
