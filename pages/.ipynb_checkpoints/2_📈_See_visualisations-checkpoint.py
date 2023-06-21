@@ -42,8 +42,8 @@ colours_country = {
         }
 
 colours_gender = {
-          'f' : '#7ae99e',
-          'm': '#2fa493'
+          'f' : '#83C9FF',
+          'm': '#0067C9'
         }
 
 characteristic_dict = {
@@ -562,18 +562,6 @@ def data_plot(key1, key2, key3, key4):
           model_scores(dataframe)
           st.subheader('''Demographics of the input labels''')
           model_vis(dataframe)
-      # if data_choice == "Modelling outcomes":
-      #     model_radio = st.radio('What demographics would you like to explore?', ("Selected groups", "Outcomes per group"), horizontal=True)
-      #     if model_radio == "Selected groups":
-      #         model_out(dataframe)
-      #     if model_radio == "Outcomes per group":
-      #         filter_for_protected(dataframe)
-      # else:
-      #     input_radio = st.radio('What demographics would you like to explore?', ("Input scores", "Label distribution"),horizontal=True)
-      #     if input_radio == "Input scores":
-      #       model_scores(dataframe)
-      #     if input_radio == "Label distribution":
-      #       model_vis(dataframe)
     with tab2:
       dataframe = st.session_state[key1]
       clean_data = st.session_state[key2]
