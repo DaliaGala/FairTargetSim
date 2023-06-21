@@ -546,7 +546,7 @@ def data_plot(key1, key2, key3, key4):
   if key1 not in st.session_state:
     st.error('Cannot train the models if you do not define the target variables. Go to "Define target variable"!', icon="🚨")
   else:
-    tab1, tab2 = st.tabs(["Demographics", "Other"])
+    tab1, tab2 = st.tabs(["Demographic", "Non-demographic"])
     with tab1:
       dataframe = st.session_state[key1]
       clean_data = st.session_state[key2]
