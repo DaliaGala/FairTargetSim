@@ -219,7 +219,7 @@ def PCA_general(full_df, dataframe_PCA):
   selections_dict = {0: 'Not selected', 1: 'Selected'}
   df_all = df_all.replace({"Dataset A": selections_dict, "Dataset B": selections_dict})
 
-  color_dict_sel = {'Not selected': '#3366CC', 'Selected': 'whitesmoke'}
+  color_dict_sel = {'Not selected': '#3366CC', 'Selected': 'grey'}
 
   if "pca_df" not in st.session_state:
     st.session_state.pca_df = df_all
@@ -579,14 +579,5 @@ def data_plot(key1, key2, key3, key4):
       else:
           st.subheader('''Principal Component Analysis''')
           PCA_general(dataframe, clean_data)
-      # metrics_radio = st.radio('What metrics would you like to see?', ("Labelled dataframe", "Venn Diagram", "Model confusion matrices", "Principal Component Analysis"), horizontal=True)
-      # if metrics_radio == "Labelled dataframe":
-      #   dataframe_out(dataframe)
-      # if metrics_radio == "Venn Diagram":
-      #   venn_diagram(dataframe)
-      # if metrics_radio == "Model confusion matrices":
-      #   mod_prop(cmA, cmB)
-      # if metrics_radio == "Principal Component Analysis":
-      #   PCA_general(dataframe, clean_data)
     
 data_plot('complete_df', 'clean_df', 'cm_A', 'cm_B')
