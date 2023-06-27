@@ -37,7 +37,7 @@ st.markdown("- **See visualizations.** You can explore how the Datasets A and B 
 st.markdown("- **Putting the idea into practice.** A practitioner who is building or using their own hiring algorithms cannot take our dashboard “off the shelf” and apply it directly to their own data or algorithms. In this section, we explain how a practitioner could adapt our dashboard, and implement the ideas behind it, into their own work.")
 
 st.subheader('Example')
-st.markdown('''Here, we present an example of the dashboard in action. Minimally changing the weights of the tests results in comlpetely different coutcomes for the models. We assigned the same weights to all cognitive characteristics but one, and trained two separate models, A and B.''')
+st.markdown('''Here, we present an example of the dashboard in action. Minimally changing the weights of the tests results in comlpetely different coutcomes for the models. We assigned the same weights to all cognitive characteristics but one. The change is highlighted in blue. The chosen candidates therefore differ only by one point in behavioral restraint. Based on these datasets, we then trained two separate models, A and B.''')
 st.image('./images/tests.png')
 
 st.markdown('''The minor change in the weights of the characteristics has resulted in a major change in the selected candidates demographics.''')
