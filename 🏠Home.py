@@ -18,6 +18,15 @@ st.title('EquiVar - Target Variable Definition Simulator')
 #Project description
 st.subheader('Motivation')
 
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
+
 st.markdown('''As machine learning techniques advance, algorithmic systems play an increasing role in hiring. Many such systems aim to predict, for example, which job applicants would be good employees for a given job. In order for an algorithmic system to identify potentially good employees, the notion of a “good” employee must be defined in terms that an algorithm can work with. In machine learning, this is called “defining the target variable” (in the case of hiring, the algorithm “aims at the target” of finding good employees).''')
 
 st.markdown('''Defining the target variable is difficult. Imagine that you are hiring a salesperson. What makes for a good salesperson? Simply someone who makes the most profitable sales? Or is a good salesperson also a good leader? Does a good salesperson come up with new ideas that can improve how the sales team operates as a whole, and not just their individual sales? (The list could go on.) Perhaps the answer is: some of everything.''')
