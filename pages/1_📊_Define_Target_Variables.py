@@ -18,6 +18,9 @@ st.set_page_config(page_title='EquiVar', page_icon=':robot_face:', layout='wide'
 hide_st_style = """
             <style>
             #GithubIcon {visibility: hidden;}
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
             </style>
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
@@ -76,7 +79,7 @@ st.title('Target variable definition')
 
 st.markdown('''On this page, we invite you to imagine that you are hiring for a certain role. Using the sliders below, you will specify two different notions of a “good employee” for that role—two different target variables. Once you’re done, the simulator will build two models, one for each of your target variable definitions. You can visualize these datasets and models—and their effects on fairness and overall features of the models and data—in the Visualize the Results page.''')
 
-st.markdown('''You specify the notions of different employees by assigning weights of importance to cognitive characteristics that a “good” employee would have for the role. The cognitive test data that you’ll be working with comes from real-world people, mirroring an increasing number of hiring algorithms that are based cognitive tests ([(Wilson, et al. 2021)](https://dl.acm.org/doi/10.1145/3442188.3445928)).''')
+st.markdown('''You specify the notions of different employees by assigning weights of importance to cognitive characteristics that a “good” employee would have for the role. The cognitive test data that you’ll be working with comes from real-world people, mirroring an increasing number of hiring algorithms that are based cognitive tests ([Wilson, et al. 2021](https://dl.acm.org/doi/10.1145/3442188.3445928)).''')
 
 st.markdown('''We have pre-set the weights below to reflect two different conceptions of a “good” employee: one conception that emphasizes attentiveness and numerical skills (A) and another conception that emphasizes interpersonal skills and memory (B). If you want to, you can change the slider values as you see fit.''')
 
@@ -97,8 +100,6 @@ with st.expander("See explanation"):
     st.markdown('''In our simulator, the cognitive characteristics shared by “good” employees are explicit. You assign different weights—using the sliders—to the cognitive characteristics you think are more or less important in a good employee (for the role you’re considering). To illustrate how different target variables have different effects on fairness and overall model attributes, you’ll define “good” employee in two ways. (We’ve made the cognitive characteristics explicit both so you can see the point of different target variable definitions more clearly, and because of limitations of the data that we’re working with.)''')
 
     st.markdown('''The cognitive characteristics that the simulator works with are from one of datasets of the [NeuroCognitive Performance Test](https://www.nature.com/articles/s41597-022-01872-8). This dataset has eleven different tests which we have grouped into five categories: ''')
-    
-    st.markdown('''The cognitive characteristics that you can give different weights are taken from one of the datasets from the NeuroCognitive Performance Test ([**NCPT dataset**](https://www.nature.com/articles/s41597-022-01872-8)). This dataset has eleven different tests which can be grouped into the following broader categories:''')
     
     st.markdown(
           """
