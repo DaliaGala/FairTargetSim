@@ -9,6 +9,17 @@ Created on Thu May 25 15:42:38 2023
 ### IMPORT LIBRARIES ###
 import streamlit as st
 
+### PAGE CONFIG ###
+st.set_page_config(page_title='EquiVar', page_icon=':robot_face:', layout='wide')
+
+# Add custom CSS to hide the GitHub icon
+hide_github_icon = """
+#GithubIcon {
+  visibility: hidden;
+}
+"""
+st.markdown(hide_github_icon, unsafe_allow_html=True)
+
 ### IDEA IN PRACTICE PAGE ###
 
 st.title("Different target variable definitions in practice")

@@ -15,6 +15,14 @@ from utils import assign_labels_by_probabilities, drop_data, train_and_predict
 ### PAGE CONFIG ###
 st.set_page_config(page_title='EquiVar', page_icon=':robot_face:', layout='wide')
 
+# Add custom CSS to hide the GitHub icon
+hide_github_icon = """
+#GithubIcon {
+  visibility: hidden;
+}
+"""
+st.markdown(hide_github_icon, unsafe_allow_html=True)
+
 ### IMPORT DATA FILES ###
 dataframe = pd.read_csv('./data/dataframe.csv')
 dataframe = dataframe.drop(["Unnamed: 0"], axis = 1)
