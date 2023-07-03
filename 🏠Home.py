@@ -32,27 +32,14 @@ st.markdown('''EquiVar is an interactive simulator, designed for technical and n
 
 st.subheader('Overview of the simulator')
 st.markdown('''The simulator has three pages, which are best visited in order.''')
-st.markdown('''- **Define target variables.** You can define two different target variables for a “toy” hiring algorithm—two different ways of understanding what counts as a successful employee—by assigning different levels of cognitive characteristics (like reasoning skills, and information processing speed) that employees can have. Once you have defined the two target variables, our dashboard will, drawing on a data-set of the cognitive tests from real-world people, build two hiring models, A and B. Model A predicts which candidates will be successful employees on your first definition; model B predicts which candidates will be successful employees on your second definition.''')
-st.markdown("- **See visualizations.** You can explore how the Datasets A and B generated based on your selections, and Models A and B trained on these datasets, differ in issues of fairness and bias. You can see, for example, which model selects more female applicants, or which model is more accurate for older applicants. You can also explore how Models A and B differ not just in matters of bias, but also in their overall performance: for example, in their overall accuracy.")
-st.markdown("- **Putting the idea into practice.** A practitioner who is building or using their own hiring algorithms cannot take our dashboard “off the shelf” and apply it directly to their own data or algorithms. In this section, we explain how a practitioner could adapt our dashboard, and implement the ideas behind it, into their own work.")
+st.markdown('''- **Define Target Variables.** On this page, we invite you to imagine that you are building a hiring algorithm for a certain role. You can define two different target variables—two different ways of understanding what counts as a good employee. The simulator then uses your target variables to generate two datasets and two models. The first model predicts which candidates will be good employees according to your first definition of “good;” the second model predicts which candidates will be good employees according to your second definition.''')
+st.markdown("- **Visualize The Results.** This page contains visualizations that illustrate how your two target variable definitions impact issues of fairness and overall model performance. You can see, for example, which model selects more female applicants, or which model is more accurate for older applicants. You can also see, among other things, how the two models differ in overall performance. In addition, you can see how your target variable definitions affect the data that go into training the model.")
+st.markdown("- **Put the Idea into Practice.** This page contains guidance for putting the simulator, and the ideas behind it, into practice. A practitioner who is building or using their own hiring algorithms cannot take our simulator “off the shelf” and apply it directly to their own data or models. We give guidance for how a practitioner could adapt our simulator to use in their own work.")
 
 st.subheader('Example')
-st.markdown('''Here, we present an example of the dashboard in action. Minimally changing the weights of the tests results in comlpetely different coutcomes for the models. We assigned the same weights to all cognitive characteristics but one. The change is highlighted in blue. The chosen candidates therefore differ only by one point in behavioral restraint. Based on these datasets, we then trained two separate models, A and B.''')
+st.markdown('''Below is an example of the simulator in action. On the Define Target Variables page, you’ll assign the importance of different cognitive characteristics by setting sliders that represent five different cognitive characters; you do this twice, and then the simulator builds two models, A and B. On the Visualize the Results page, you’ll see how even very small changes—such as changing one point of importance for “behavioral restraint’’ (highlighted in green)—can result in completely different outcomes for the models.''')
+st.markdown('''**From the Define Target Variables page:**''')
 st.image('./images/tests.png')
 
-st.markdown('''The minor change in the weights of the characteristics has resulted in a major change in the selected candidates demographics.''')
+st.markdown('''**From the Visualize the Results page:**''')
 st.image('./images/pie_charts.png')
-
-#Create info boxes for authors, links and GitHub
-# Set columns
-c1, c2, c3, c4 = st.columns((2.2,2.6,2,1.8))
-
-#Create info boxes for authors, links and GitHub
-with c1:
-  st.info('**Data Scientist: [Dalia Sara Gala](https://twitter.com/dalia_science)**')
-with c2:
-  st.info('**Philosophy Lead: [Milo Phillips-Brown](https://www.milopb.com/)**')
-with c3:
-  st.info('**Accenture team: [@The Dock](https://www.accenture.com/gb-en/services/about/innovation-hub-the-dock)**')
-with c4:
-  st.info('**GitHub: [Hiring-model](https://github.com/DaliaGala/Hiring-model)**')
