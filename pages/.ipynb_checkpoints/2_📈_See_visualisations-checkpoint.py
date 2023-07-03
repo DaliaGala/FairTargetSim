@@ -20,14 +20,6 @@ from utils import display_proportional, plot_data, run_PCA, create_confusion_mat
 ### PAGE CONFIG ###
 st.set_page_config(page_title='EquiVar', page_icon=':robot_face:', layout='wide')
 
-# Add custom CSS to hide the GitHub icon
-hide_github_icon = """
-#GithubIcon {
-  visibility: hidden;
-}
-"""
-st.markdown(hide_github_icon, unsafe_allow_html=True)
-
 ### DICTIONARIES AND CONSTANTS###
 
 colours_education = {
