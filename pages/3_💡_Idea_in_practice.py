@@ -12,8 +12,9 @@ import streamlit as st
 ### IDEA IN PRACTICE PAGE ###
 
 st.title("Different target variable definitions in practice")
-st.markdown('''This dashboard is designed to help you understand how the notion of a “good employee” is translated into machine learning models—by defining target variables—and how target variable definition affects fairness in hiring algorithms (and other aspects of such algorithms too). On this page, we describe how to put the dashboard, and the insights it affords, into practice. 
-How can this be done? The first step is to make two changes to the dashboard, because you cannot simply take it “off the shelf” and immediately put it into practice. This is because:''')
+st.markdown('''This dashboard is designed to help you understand how the notion of a “good employee” is translated into machine learning models—by defining target variables—and how target variable definition affects fairness in hiring algorithms (and other aspects of such algorithms too). On this page, we describe how to put the dashboard, and the insights it affords, into practice.''')
+
+st.markdown('''How can this be done? The first step is to make two changes to the dashboard, because you cannot simply take it “off the shelf” and immediately put it into practice. This is because:''')
 
 st.markdown('''- The dashboard is not built using your data or your models.''')
 
