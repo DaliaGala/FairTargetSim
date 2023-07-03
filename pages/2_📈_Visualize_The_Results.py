@@ -17,6 +17,13 @@ from matplotlib_venn import venn2
 from sklearn.metrics import confusion_matrix
 from utils import display_proportional, plot_data, run_PCA, create_confusion_matrix_heatmap, plot_conf_rates
 
+hide_st_style = """
+            <style>
+            #GithubIcon {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
+
 ### PAGE CONFIG ###
 st.set_page_config(page_title='EquiVar', page_icon=':robot_face:', layout='wide')
 

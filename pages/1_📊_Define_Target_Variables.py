@@ -12,6 +12,13 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from utils import assign_labels_by_probabilities, drop_data, train_and_predict
 
+hide_st_style = """
+            <style>
+            #GithubIcon {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
+
 ### PAGE CONFIG ###
 st.set_page_config(page_title='EquiVar', page_icon=':robot_face:', layout='wide')
 
@@ -66,30 +73,30 @@ df_keys_dict = {
 
 ### CREATE THE "TARGET VARIABLE DEFINITION" PAGE ###
 st.title('Target variable definition')
-st.markdown('''Imagine you are hiring for a position of your choice. Your task below is to define **two different notions** of a 
-             successful employee for that position by assigning different levels of importance to cognitive characteristics. We have pre-filled the
-             choices to reflect a manager who values attentiveness and numerical skills (A) and a manager who values interpersonal 
-             skills and memory (B). If you want to, you can change the slider values as you see fit. Next, click :red[“Assign labels and train your models”]. The 
-             dashboard will then label certain individuals as "successful employees" - in other words it will assign class labels "1" for 
-             successful and "0" for unsuccessful, based on your selections. Now, after this labelled dataset has been created, the dashboard will generate 
-             two different models, one for each of your target variable definitions. In the “See visualisations” page, you can see how your two 
-             models differ in matters of bias and overall performance.''')
 
-st.markdown('''To see more about the nature of the target variable definition and how hiring models of the type we demonstrate in this 
-            dashboard work, click :green["See explanation"] below.''')
+st.markdown('''On this page, we invite you to imagine that you are hiring for a certain role. Using the sliders below, you will specify two different notions of a “good employee” for that role—two different target variables. Once you’re done, the simulator will build two models, one for each of your target variable definitions. You can visualize these datasets and models—and their effects on fairness and overall features of the models and data—in the Visualize the Results page.''')
 
+st.markdown('''You specify the notions of different employees by assigning weights of importance to cognitive characteristics that a “good” employee would have for the role. The cognitive test data that you’ll be working with comes from real-world people, mirroring an increasing number of hiring algorithms that are based cognitive tests ([(Wilson, et al. 2021)](https://dl.acm.org/doi/10.1145/3442188.3445928)).''')
+
+st.markdown('''We have pre-set the weights below to reflect two different conceptions of a “good” employee: one conception that emphasizes attentiveness and numerical skills (A) and another conception that emphasizes interpersonal skills and memory (B). If you want to, you can change the slider values as you see fit.''')
+
+st.markdown('''After you’ve set the slider values, click :red[“Assign labels and train your models”]. The simulator will then label certain individuals as "good employees"—in other words it will assign class labels "1" for successful and "0" for not good, based on your selections. Then, the simulator will build the two models.''')
+
+st.markdown('''To learn more about target variable definition and hiring models based in cognitive tests, :green["See explanation"] below.''')
 
 with st.expander("See explanation"):
     
-    st.markdown('''The kind of models that the dashboard builds are of a kind increasingly used in hiring software: companies will have applicants play games that test for different kinds of cognitive ability (like reasoning or information-processing speed). And then hiring software will be built to predict which applicants will be successful based on which cognitive characteristics they have. What cognitive characteristics make for a successful employee? This will depend on what role is being hired for (salesperson? engineer? - the choice is yours). And it will also depend on how we define “successful employee.”''')
+    st.markdown('''The models that the simulator builds are of a kind increasingly used in hiring software: companies will have applicants play games that test for different kinds of cognitive ability (like reasoning or memory). Then hiring software will be built to predict which applicants will be successful based on which cognitive characteristics they have. What cognitive characteristics make for a successful employee? This will depend on what role is being hired. And it will also depend on how one defines “successful employee.”''')
     
-    st.markdown('''In the real-world, “successful employee” is defined for these kinds of hiring models in the following way. Managers from the company doing the hiring will select a group of current employees that they consider to be successful; this group of current employees will play the cognitive test games. The hiring algorithm will then try to identify applicants who are similar—in cognitive characteristics—to the current employees that are considered successful. The target variable of “successful employee” is thus defined in terms of comparison to certain people who are deemed successful. ''')
+    st.markdown('''In the real world, “successful employee” is defined for these kinds of hiring models in the following way. Managers select a group of current employees that they consider to be successful; this group of employees plays the cognitive test games. A model is then trained to identify applicants who share cognitive characteristics with the current employees that are considered successful. The target variable of “successful employee” is thus defined in terms of comparison to certain people who are deemed successful. ''')
 
-    st.markdown('''One will get different target variables if one deems different current employees as the successful ones. And, as we discussed in the About page (and as we explain more in the Putting the Idea Into Practice), there will likely be disagreement between managers about which employees are successful. For instance, a manager who values attentiveness and numerical skills will deem different employees “successful” in comparison to a manager who values interpersonal skills and memory. Even when different managers roughly share their sensibilities in what characteristics make for a successful employee, there may still be different, equally good ways to “weight” the importance of the various characteristics.''')
+    st.markdown('''One will get different target variables if one deems different current employees as the successful ones. And, as we discussed in the Home page (and as we explain more in the Putting the Idea into Practice page), there will likely be disagreement between managers about which employees are successful. For instance, a manager who values attentiveness and numerical skills will deem different employees “successful” than a manager who values interpersonal skills and memory. Even when different managers roughly share their sensibilities in what characteristics make for a successful employee, there may still be different, equally good ways to “weight” the importance of the various characteristics.''')
     
-    st.markdown('''In the real-world, the cognitive characteristics shared by those considered successful employees is implicit. Companies do not first identify what cognitive characteristics make for a successful employee; rather, they identify employees who they consider successful, and then the hiring model “works backwards” to identify what characteristics these employees share.''')
+    st.markdown('''In the real world, the cognitive characteristics shared by those considered successful employees is implicit. Companies do not first identify the cognitive characteristics that make for a successful employee; rather, they identify employees who they consider successful, and then the hiring model works backwards to identify what characteristics these employees share.''')
     
-    st.markdown('''In our dashboard, these cognitive characteristics are explicit. You pick—using the sliding scales—which cognitive characteristics you think are more or less important to a successful employee. (You can imagine that you are hiring for a specific role.) You’ll do this once to define “successful employee” in one way, and then a second time to define “successful employee” in another way. (We’ve made the cognitive characteristics explicit both so you can see the point of different target variable definitions more clearly, and because of limitations of the data that we’re working with.)''')
+    st.markdown('''In our simulator, the cognitive characteristics shared by “good” employees are explicit. You assign different weights—using the sliders—to the cognitive characteristics you think are more or less important in a good employee (for the role you’re considering). To illustrate how different target variables have different effects on fairness and overall model attributes, you’ll define “good” employee in two ways. (We’ve made the cognitive characteristics explicit both so you can see the point of different target variable definitions more clearly, and because of limitations of the data that we’re working with.)''')
+
+    st.markdown('''The cognitive characteristics that the simulator works with are from one of datasets of the [NeuroCognitive Performance Test](https://www.nature.com/articles/s41597-022-01872-8). This dataset has eleven different tests which we have grouped into five categories: ''')
     
     st.markdown('''The cognitive characteristics that you can give different weights are taken from one of the datasets from the NeuroCognitive Performance Test ([**NCPT dataset**](https://www.nature.com/articles/s41597-022-01872-8)). This dataset has eleven different tests which can be grouped into the following broader categories:''')
     
@@ -102,7 +109,7 @@ with st.expander("See explanation"):
           - **Behavioral Restraint**: Go/No go
           """)
     
-    st.markdown('''You can assign weights to these features using sliders. The weights will represent the importance of these features in defining a “successful employee.” You can check the assigned percentages for each subtest by ticking the checkbox beneath the sliders.''')
+    st.markdown('''After you’ve set the weights to these five characteristics using the sliders, you can see which weights are assigned to each test (e.g. Forward Memory Span or Digit Symbol Coding) by ticking the checkbox beneath the sliders. ''')
 
 col1, col2 = st.columns(2)
 
