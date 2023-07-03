@@ -110,7 +110,7 @@ with st.expander("See explanation"):
           - **Behavioral Restraint**: Go/No go
           """)
     
-    st.markdown('''After you’ve set the weights to these five characteristics using the sliders, you can see which weights are assigned to each test (e.g. Forward Memory Span or Digit Symbol Coding) by ticking the checkbox beneath the sliders. ''')
+    st.markdown('''After you’ve set the weights to these five characteristics using the sliders, you can see which weights are assigned to each test (e.g. Forward Memory Span or Digit Symbol Coding) by ticking the checkbox beneath the sliders.''')
 
 col1, col2 = st.columns(2)
 
@@ -223,7 +223,7 @@ if st.button("Assign labels and train your models", type = "primary", use_contai
     num_rows_with_all_flags_1 = len(new_annotated[new_annotated[selected_cols].sum(axis=1) == len(selected_cols)])
     
     # print the result
-    st.write(f"Shared candidates between your target variables: :green[{num_rows_with_all_flags_1}].")
+    st.write(f"Shared candidates between your target variables: :green[{num_rows_with_all_flags_1}] (among 100 total candidates per each target variable).")
     with st.spinner('Please wait... The models will be trained now.'):
 
       X_data, Y_data_A, Y_data_B = clean_data.iloc[:, :-2], clean_data.iloc[:, [-2]], clean_data.iloc[:, [-1]]

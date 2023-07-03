@@ -554,7 +554,7 @@ def filter_for_protected(data):
 def data_plot(key1, key2, key3, key4):
   st.title('''Visualize the Results''')
   if key1 not in st.session_state:
-    st.error('Cannot train the models if you do not define the target variables. Go to "Define target variable"!', icon="🚨")
+    st.error('Cannot train the models if you do not define the target variables. Go to "Define Target Variables"!', icon="🚨")
   else:
     tab1, tab2 = st.tabs(["Demographic", "Non-demographic"])
     with tab1:
