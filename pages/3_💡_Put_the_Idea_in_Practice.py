@@ -9,15 +9,15 @@ Created on Thu May 25 15:42:38 2023
 ### IMPORT LIBRARIES ###
 import streamlit as st
 
+### PAGE CONFIG ###
+st.set_page_config(page_title='EquiVar', page_icon=':robot_face:', layout='wide')
+
 hide_st_style = """
             <style>
             #GithubIcon {visibility: hidden;}
             </style>
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
-
-### PAGE CONFIG ###
-st.set_page_config(page_title='EquiVar', page_icon=':robot_face:', layout='wide')
 
 ### IDEA IN PRACTICE PAGE ###
 

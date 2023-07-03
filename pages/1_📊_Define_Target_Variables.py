@@ -12,15 +12,15 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from utils import assign_labels_by_probabilities, drop_data, train_and_predict
 
+### PAGE CONFIG ###
+st.set_page_config(page_title='EquiVar', page_icon=':robot_face:', layout='wide')
+
 hide_st_style = """
             <style>
             #GithubIcon {visibility: hidden;}
             </style>
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
-
-### PAGE CONFIG ###
-st.set_page_config(page_title='EquiVar', page_icon=':robot_face:', layout='wide')
 
 ### IMPORT DATA FILES ###
 dataframe = pd.read_csv('./data/dataframe.csv')
