@@ -203,7 +203,7 @@ def model_scores(dataframe):
         st.plotly_chart(fig, use_container_width=True)
 
 def PCA_general(full_df, dataframe_PCA):
-  st.markdown('''On this page, you can see the distribution of the dataset labels which were assigned based on the scores calculated from the slider values you selected previously. Principal Components Analysis, or PCA, is a technique often used to analyse and subsequently visualise datasets where there are many features per single example. This is the case with the NCPT dataset used in our simulator. Specifically, the battery which we used has 11 features per single example, the example being the player of cognitive games, and, in our metaphor, a hypothetical employee or job candidate. It is impossible to plot 11 dimensions, and PCA allows for the visualisation of multidimensional data, while also preserving as much information as possible.''')
+  st.markdown('''On this page, you can see the distribution of the dataset labels which were assigned based on the scores calculated from the slider values you selected previously. Principal Components Analysis, or PCA, is a technique often used to analyse and subsequently visualize datasets where there are many features per single example. This is the case with the NCPT dataset used in our simulator. Specifically, the battery which we used has 11 features per single example, the example being the player of cognitive games, and, in our metaphor, a hypothetical employee or job candidate. It is impossible to plot 11 dimensions, and PCA allows for the visualisation of multidimensional data, while also preserving as much information as possible.''')
   choice = st.radio("What would you like to explore?", ("PCAs", "Components loading"), horizontal = True)
   pcaA, dfA, labelsA, coeffA, componentsA = run_PCA(dataframe_PCA, 'Model_B_label', 'Model_A_label', 2)
   pcaB, dfB, labelsB, coeffB, componentsB = run_PCA(dataframe_PCA, 'Model_A_label', 'Model_B_label', 2)
@@ -355,7 +355,7 @@ def PCA_general(full_df, dataframe_PCA):
 def model_out(full_df):
   st.markdown('''This section highlights the discrepancies between your two models when presented with the same pool of new, previously unseen candidates to label. Specifically, you'll be investigating the candidates assigned a "1" label by both models. These individuals would be those considered for a job interview or chosen for the role, according to your defined target variable.''')
   # Create a selectbox to choose a protected characteristic to explore
-  selectbox = st.selectbox('Charactertistic to explore', characteristic_dict.keys())
+  selectbox = st.selectbox('Characteristic to explore', characteristic_dict.keys())
   representation = st.selectbox("Representation", ("absolute", "proportional"))
   row1_space1, row1_1, row1_space2, row1_2, row1_space3 = st.columns((0.1, 3, 0.1, 3, 0.1))
   with row1_1:
@@ -423,11 +423,11 @@ def venn_diagram(full_df):
 
 
 def model_vis(full_df):
-  st.markdown('''In this section, you can visualise the demographics of the different subgroups of the data. Firstly, you can see the demographic characteristics of the candidates who have positive labels ("1") and negative labels ("0") which were assigned based on the scores calculated from the slider values you selected previously. Then, you can visualise the demographic distributions of the data which was used for training and evaluation of the models.''')
+  st.markdown('''In this section, you can visualize the demographics of the different subgroups of the data. Firstly, you can see the demographic characteristics of the candidates who have positive labels ("1") and negative labels ("0") which were assigned based on the scores calculated from the slider values you selected previously. Then, you can visualize the demographic distributions of the data which was used for training and evaluation of the models.''')
   choice = st.radio("**Select desired data:**", ("Positive and negative labels", "Training and evaluation data"), horizontal=True)
   if choice == "Positive and negative labels":
     # Create a selectbox to choose a protected characteristic to explore
-    selectbox_Lab = st.selectbox('Label to visualise', ('positive labels', 'negative labels'))
+    selectbox_Lab = st.selectbox('Label to visualize', ('positive labels', 'negative labels'))
 
     # Create a selectbox to choose a protected characteristic to explore
     selectbox_Char = st.selectbox('Protected characteristic', characteristic_dict.keys())
@@ -463,7 +463,7 @@ def model_vis(full_df):
 
   if choice == "Training and evaluation data":
     # Create a selectbox to choose a protected characteristic to explore
-    selectbox = st.selectbox('Charactertistic to explore', characteristic_dict.keys())
+    selectbox = st.selectbox('Characteristic to explore', characteristic_dict.keys())
     row1_space1, row1_1, row1_space2, row1_2, row1_space3 = st.columns((0.1, 1, 0.1, 1, 0.1))
     # Plot training data
     with row1_1:
@@ -489,7 +489,7 @@ def model_vis(full_df):
     st.markdown('''To train a machine learning model, the data has to be split into two different sets. The first set is the training data, which will be used to teach the model the relationships between the input features (11 subtest results) and the corresponding labels ("0" and "1", assigned based on your definitions of target variables and the values you chose for the sliders). The second set is the test data, or evaluation data. It is used to assess the performance of the model. This is the data which is used to plot the confusion matrices and calculate the model metrics which you saw at the bottom of the "Define the target variable" page. This is also the data whose features you can explore in "Modelling outcomes". It is important that the training and testing data are balanced. Here, you can compare the demographic composition of the training and evaluation data. The training and evaluation datasets compositions were the same and contained the same candidates and same features for both models A and B. However, the labels for each dataset were different and based on what you selected in "Define target variable".''')
 
 def filter_for_protected(data):
-  st.markdown('''Sometimes, the overall model metrics can be deceptive when it comes to predicting the results for different groups in consideration. Ideally, for our models, the varying model metrics would be similar across different groups, which would indicate that the overall model performance is reflected in how this model performs for a given group. It is often not the case, and it is likely that you will see that models A and B perform differently when it comes to those metrics. Even the same model can have different metrics for different subgroups.''')
+  st.markdown('''Sometimes, the overall model metrics can be deceptive when it comes to predicting the results for different groups under consideration. Ideally, for our models, the varying model metrics would be similar across different groups, which would indicate that the overall model performance is reflected in how this model performs for a given group. It is often not the case, and it is likely that you will see that models A and B perform differently when it comes to those metrics. Even the same model can have different metrics for different subgroups.''')
   model = st.selectbox('Choose which model outputs to assess', pred_dict.keys())
   test = data.loc[data[pred_dict[model]] != "train"]
 
@@ -552,7 +552,7 @@ def filter_for_protected(data):
     st.table(df)
 
 def data_plot(key1, key2, key3, key4):
-  st.title('''Visualise the generated datasets and model outcomes''')
+  st.title('''Visualize the Results''')
   if key1 not in st.session_state:
     st.error('Cannot train the models if you do not define the target variables. Go to "Define target variable"!', icon="🚨")
   else:
