@@ -23,7 +23,8 @@ hide_st_style = """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
 #Set title
-st.title('FairTargetSim - Target Variable Definition Simulator')
+st.title('FairTargetSim')
+st.subheader('''Interactive Target Variable Definition Simulator''')
 
 #Project description
 st.subheader('Motivation')
