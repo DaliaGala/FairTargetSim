@@ -13,7 +13,7 @@ from sklearn.model_selection import train_test_split
 from utils import assign_labels_by_probabilities, drop_data, train_and_predict
 
 ### PAGE CONFIG ###
-st.set_page_config(page_title='EquiVar', page_icon=':robot_face:', layout='wide')
+st.set_page_config(page_title='FairTargetSim', page_icon=':robot_face:', layout='wide')
 
 hide_st_style = """
             <style>

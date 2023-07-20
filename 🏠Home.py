@@ -10,7 +10,7 @@ Created on Thu May 25 15:13:58 2023
 import streamlit as st
 
 ### PAGE CONFIG ###
-st.set_page_config(page_title='EquiVar', page_icon=':robot_face:', layout='wide')
+st.set_page_config(page_title='FairTargetSim', page_icon=':robot_face:', layout='wide')
 
 hide_st_style = """
             <style>
@@ -23,7 +23,7 @@ hide_st_style = """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
 #Set title
-st.title('EquiVar - Target Variable Definition Simulator')
+st.title('FairTargetSim - Target Variable Definition Simulator')
 
 #Project description
 st.subheader('Motivation')
@@ -38,7 +38,7 @@ st.markdown('''Defining the target variable is not only difficult; it can also h
 
 st.markdown('''Target variable definition is not a merely technical matter. The question of who counts as a “good” employee, and this question's implications on fairness, is fundamentally value-laden. It calls for close attention and transparency [(Fazelpour & Danks, 2021)](https://compass.onlinelibrary.wiley.com/doi/full/10.1111/phc3.12760). All too often, though, target variables are defined in technical settings without attention to fairness. Further, stakeholders who aren't a part of the technical process—like managers in non-technical roles, or those working in upper management or human resources—either do not understand, or are simply not aware of, the fraught nature of target variable definition.''')
 
-st.markdown('''EquiVar is an interactive simulator, designed for technical and non-technical audiences alike, that is designed to help address this issue. The simulator makes the implications of target variable definition explicit—and transparent—and offers a blue-print for those who want to address these effects in practice. ''')
+st.markdown('''FairTargetSim is an interactive simulator, designed for technical and non-technical audiences alike, that is designed to help address this issue. The simulator makes the implications of target variable definition explicit—and transparent—and offers a blue-print for those who want to address these effects in practice. ''')
 
 st.subheader('Overview of the simulator')
 st.markdown('''The simulator has three pages, which are best visited in order.''')

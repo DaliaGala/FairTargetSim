@@ -10,7 +10,7 @@ Created on Thu May 25 15:42:38 2023
 import streamlit as st
 
 ### PAGE CONFIG ###
-st.set_page_config(page_title='EquiVar', page_icon=':robot_face:', layout='wide')
+st.set_page_config(page_title='FairTargetSim', page_icon=':robot_face:', layout='wide')
 
 hide_st_style = """
             <style>

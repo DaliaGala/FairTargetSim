@@ -18,7 +18,7 @@ from sklearn.metrics import confusion_matrix
 from utils import display_proportional, plot_data, run_PCA, create_confusion_matrix_heatmap, plot_conf_rates
 
 ### PAGE CONFIG ###
-st.set_page_config(page_title='EquiVar', page_icon=':robot_face:', layout='wide')
+st.set_page_config(page_title='FairTargetSim', page_icon=':robot_face:', layout='wide')
 
 hide_st_style = """
             <style>
