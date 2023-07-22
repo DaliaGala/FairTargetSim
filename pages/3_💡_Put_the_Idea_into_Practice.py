@@ -31,7 +31,7 @@ st.markdown('''How can the simulator be put into practice? The first step is to 
 
 st.markdown('''- The simulator is not built using your data or your models.''')
 
-st.markdown('''- •	How you define a target variable in the simulator is not how it’s done in practice. (Rather, the way you define it in the simulator is a straightforward way for you to see the effects of target variable definition.)''')
+st.markdown('''- How you define a target variable in the simulator is not how it’s done in practice. (Rather, the way you define it in the simulator is a straightforward way for you to see the effects of target variable definition.)''')
 st.markdown('''Below we describe how to address these two issues.''')
 
 st.subheader('''Using your data and your models''')
