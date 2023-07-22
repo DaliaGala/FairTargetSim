@@ -25,18 +25,18 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 ### IDEA IN PRACTICE PAGE ###
 
 st.title("Put the Idea into Practice")
-st.markdown('''This simulator is designed to help you understand how the notion of a “good employee” is translated into machine learning models—by defining target variables—and how target variable definition affects fairness in hiring algorithms (and other aspects of such algorithms too). On this page, we describe how to put the simulator, and the insights it affords, into practice.''')
+st.markdown('''This simulator is designed to help you understand the impacts—social, ethical, and technical—of target variable definition. On this page, we describe how to put the simulator, and the insights it affords, into practice. As with much of the simulator, we will focus on the case of hiring, but what we say applies just as well to other domains, such as college admissions or news recommendation, as we discussed on the Home page.''')
 
-st.markdown('''How can this be done? The first step is to make two changes to the simulator, because you cannot simply take it “off the shelf” and immediately put it into practice. This is because:''')
+st.markdown('''How can the simulator be put into practice? The first step is to make two changes to the simulator, because you cannot simply take it “off the shelf” and immediately put it into practice. This is because:''')
 
 st.markdown('''- The simulator is not built using your data or your models.''')
 
-st.markdown('''- How you define a target variable in the simulator is not how it’s done in practice. (Rather, the way you define it in the simulator is a straightforward way for you to see the effects of target variable definition.)''')
+st.markdown('''- •	How you define a target variable in the simulator is not how it’s done in practice. (Rather, the way you define it in the simulator is a straightforward way for you to see the effects of target variable definition.)''')
 st.markdown('''Below we describe how to address these two issues.''')
 
 st.subheader('''Using your data and your models''')
 
-st.markdown('''The simulator offers a starting point: if you want to build something like the simulator for your data and your models, you now have a blue-print to work from.''')
+st.markdown('''The simulator offers a starting point: its code is open-source. If you want to build something like the simulator for your data and your models, you now have a blue-print to work from.''')
 
 st.subheader('''Defining the target variable in practice''')
 
