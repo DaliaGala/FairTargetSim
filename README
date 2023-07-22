@@ -1,1 +1,1 @@
-This is a demonstration of concepts described in the paper: 'EquiVar - a new paradigm in hiring by machine'.
+Machine learning requires defining one's target variable, a process that can have profound implications on fairness. We developed FairTargetSim (FTS), an interactive simulator that educates non-technical stakeholders on target variable definition, and illustrate its implications on fairness for all stakeholders. FTS works with a case study, hiring algorithms---using real-world data and user-defined target variables.
