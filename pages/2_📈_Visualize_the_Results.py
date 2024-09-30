@@ -463,28 +463,29 @@ def model_vis(full_df):
 
   if choice == "Training and evaluation data":
     # Create a selectbox to choose a protected characteristic to explore
-    selectbox = st.selectbox('Characteristic to explore', characteristic_dict.keys())
     row1_space1, row1_1, row1_space2, row1_2, row1_space3 = st.columns((0.1, 1, 0.1, 1, 0.1))
     # Plot training data
     with row1_1:
+      selectbox1 = st.selectbox('Characteristic to explore - train', characteristic_dict.keys())
       st.subheader("Training data")
 
       # Select train data
       train = full_df.loc[full_df["Predicted_A"] == "train"]
 
       # Use function plot_data to plot selected data
-      plot_data(train, selectbox, characteristic_dict[selectbox])
+      plot_data(train, selectbox1, characteristic_dict[selectbox1])
 
     # Plot test data
 
     with row1_2:
+      selectbox2 = st.selectbox('Characteristic to explore - test', characteristic_dict.keys())
       st.subheader("Test data")
 
       # Select test data
       test = full_df.loc[full_df["Predicted_A"] != "train"]
 
       # Use function plot_data to plot selected data
-      plot_data(test, selectbox, characteristic_dict[selectbox])
+      plot_data(test, selectbox2, characteristic_dict[selectbox2])
   
     st.markdown('''To train a machine learning model, the data has to be split into two different sets. The first set is the training data, which will be used to teach the model the relationships between the input features (11 subtest results) and the corresponding labels ("0" and "1", assigned based on your definitions of target variables and the values you chose for the sliders). The second set is the test data, or evaluation data. It is used to assess the performance of the model. This is the data which is used to plot the confusion matrices and calculate the model metrics which you saw at the bottom of the "Define the target variable" page. This is also the data whose features you can explore in "Modelling outcomes". It is important that the training and testing data are balanced. Here, you can compare the demographic composition of the training and evaluation data. The training and evaluation datasets compositions were the same and contained the same candidates and same features for both models A and B. However, the labels for each dataset were different and based on what you selected in "Define target variable".''')
 
